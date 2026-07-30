@@ -1,6 +1,8 @@
-package MCO2;
+package MCO2.controller;
 
-import MCO2.WelcomeInterface;
+import MCO2.model.*;
+import MCO2.view.*;
+
 import java.io.*;
 import java.util.*;
 import java.awt.event.*;
@@ -81,7 +83,7 @@ public class gameStart {
 		
 		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
 				
 				JOptionPane.showMessageDialog(welcomeView,"YOUR SPELLBOOK");
 				
@@ -103,11 +105,22 @@ public class gameStart {
 						
 					}
 					
-					JOptionPane.showMessageDialog(welcomeView, sb.toString(), "Spellbook Unlocked", JOptionPane.INFORMATION_MESSAGE);
+					welcomeView.getSpellbookCard().updateSpellbookDisplay(sb.toString());
 					
 				}
+				
+				welcomeView.showSpellbookPage();
 			}
 		});
+		
+		this.welcomeView.getSpellbookCard().getBtnExitSpellbookHome().addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				welcomeView.showDashboardPage();
+			}
+		});
+		
+	
 		
 		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
 			@Override
@@ -146,7 +159,7 @@ public class gameStart {
 					
 					p.setClaimedBonus(true);
 					
-					JOptionPane.showMessageDialog(welcomeView,"Success! You received 1x free [" + prizeItem.ingredientName + "]","Daily Claim Logged", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(welcomeView,"Success! You received 1x free [" + prizeItem.getIngredientName() + "]","Daily Claim Logged", JOptionPane.INFORMATION_MESSAGE);
 					refreshDashboardView();
 				}
 			}
