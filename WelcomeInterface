@@ -1,0 +1,151 @@
+package MCO2;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
+public class WelcomeInterface extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	
+	private CardLayout cardLayout;
+	private JPanel mainContainerPanel;
+	
+	private JPanel welcomePagePanel;
+	private JButton btnNewGame;
+	private JButton btnLoadGame;
+	
+	
+	private JPanel dashboardPagePanel;
+	private JLabel lblPlayerStatus;
+	private JButton btnBrewConcoction;
+	private JButton btnCheckInventory;
+	private JButton btnCheckSpellbook;
+	private JButton btnVisitMarket;
+	private JButton btnBlessCauldron;
+	private JButton btnLoginBonus;
+	private JButton btnExitGame;
+
+	/**
+	 * Create the frame.
+	 */
+	public WelcomeInterface() {
+		setTitle("Potion Prodigy");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 588, 450);
+		setLocationRelativeTo(null);
+		
+		cardLayout = new CardLayout();
+		mainContainerPanel = new JPanel(cardLayout);
+		setContentPane(mainContainerPanel);
+		
+		//page1
+		
+		welcomePagePanel = new JPanel();
+		welcomePagePanel.setLayout(null);
+		
+		JLabel lblTitle = new JLabel("Welcome to Potion Prodigy!");
+		lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+		lblTitle.setBounds(97, 30, 411, 47);
+		welcomePagePanel.add(lblTitle);
+		
+		btnLoadGame = new JButton("Load Game");
+		btnLoadGame.setBounds(213, 199, 177, 70);
+        welcomePagePanel.add(btnLoadGame);
+        
+        btnNewGame = new JButton("New Game");
+		btnNewGame.setBounds(213, 106, 177, 70);
+        welcomePagePanel.add(btnNewGame);
+
+        mainContainerPanel.add(welcomePagePanel, "WELCOME_PAGE");
+        
+        // page2
+
+        dashboardPagePanel = new JPanel();
+        dashboardPagePanel.setLayout(null);
+
+        lblPlayerStatus = new JLabel("Welcome to the Main Menu!");
+        lblPlayerStatus.setHorizontalAlignment(SwingConstants.CENTER);
+        lblPlayerStatus.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+        lblPlayerStatus.setBounds(141, 27, 300, 20);
+        dashboardPagePanel.add(lblPlayerStatus);
+
+        btnBrewConcoction = new JButton("Brew Concoction");
+        btnBrewConcoction.setBounds(217, 88, 150, 30);
+        dashboardPagePanel.add(btnBrewConcoction);
+
+        btnCheckInventory = new JButton("Check Inventory");
+        btnCheckInventory.setBounds(217, 130, 150, 30);
+        dashboardPagePanel.add(btnCheckInventory);
+
+        btnCheckSpellbook = new JButton("Check Spellbook");
+        btnCheckSpellbook.setBounds(217, 172, 150, 30);
+        dashboardPagePanel.add(btnCheckSpellbook);
+        
+        btnVisitMarket = new JButton("Visit Market");
+        btnVisitMarket.setBounds(217, 214, 150, 30);
+        dashboardPagePanel.add(btnVisitMarket);
+        
+        btnBlessCauldron = new JButton("Bless Cauldron");
+        btnBlessCauldron.setBounds(217, 256, 150, 30);
+        dashboardPagePanel.add(btnBlessCauldron);
+        
+        btnLoginBonus = new JButton("Login Bonus");
+        btnLoginBonus.setBounds(217, 298, 150, 30);
+        dashboardPagePanel.add(btnLoginBonus);
+        
+        btnExitGame = new JButton("Exit Game");
+        btnExitGame.setBounds(217, 340, 150, 30);
+        dashboardPagePanel.add(btnExitGame);
+        
+        mainContainerPanel.add(dashboardPagePanel, "DASHBOARD_PAGE");
+    }
+	
+	public void showWelcomePage() {
+		cardLayout.show(mainContainerPanel, "WELCOME_PAGE");
+	}
+	
+	public void showDashboardPage() {
+		cardLayout.show(mainContainerPanel, "DASHBOARD_PAGE");
+	}
+	
+	public JButton getBtnNewGame() {
+		return this.btnNewGame;
+	}
+	
+	public JButton getBtnLoadGame() {
+		return this.btnLoadGame;
+	}
+	
+	public JButton getBtnBrewConcoction() {
+		return this.btnBrewConcoction;
+	}
+	
+	public JButton getBtnCheckInventory() {
+		return this.btnCheckInventory;
+	}
+	
+	public JButton getBtnCheckSpellbook() {
+		return this.btnCheckSpellbook;
+	}
+	
+	public JButton getBtnVisitMarket() {
+		return this.btnVisitMarket;
+	}
+	
+	public JButton getBtnBlessCauldron() {
+		return this.btnBlessCauldron;
+	}
+	
+	public JButton getBtnLoginBonus() {
+		return this.btnLoginBonus;
+	}
+	
+	public JButton getBtnExitGame() {
+		return this.btnExitGame;
+	}
+	
+	public void updateStatusDisplay(String text) {
+		this.lblPlayerStatus.setText(text);
+	}
+}
