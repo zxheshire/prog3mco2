@@ -1,0 +1,449 @@
+package MCO2;
+
+import MCO2.WelcomeInterface;
+import java.io.*;
+import java.util.*;
+import java.awt.event.*;
+import javax.swing.JOptionPane;
+
+/** Manages the core game loop, file saving/loading, and state changes 
+ * for the "Potion Prodigy" game.
+ *
+ * @author Marie Valle
+ * @version 1.0
+ * @since 2026 
+ */
+public class gameStart {
+	
+	private Player p;
+	private Scanner scanner;
+	private boolean isRunning;
+	private RecipeDatabase recipeDB;
+	private Market primaryMarket;
+	
+	private WelcomeInterface welcomeView;
+	
+	/**Initializes a new game controller session.
+	 * Sets up the input scanner, marks the game state as running, 
+	 * and loads blank database and market instances.
+	 */
+	
+	public gameStart() {
+		this.scanner = new Scanner(System.in);
+		this.recipeDB = new RecipeDatabase();
+		this.primaryMarket = new Market();
+	}
+	
+	/**
+	 * Loads the master recipe database from an external CSV file.
+	 * @param csvPath  is the file path
+	 */
+	
+	public void initializeRecipes(String csvPath) {
+		this.recipeDB.loadPCcsv(csvPath);
+	}
+	
+	/* Displays the welcome screen and handles the primary entry choices 
+	 * to either start a brand new game session or restore an old one.
+	 */
+	
+	public void bootUp() {
+		
+		this.welcomeView = new WelcomeInterface();
+		
+		this.welcomeView.getBtnNewGame().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				handleGuiNewGame();
+			}
+		});
+		
+		this.welcomeView.getBtnLoadGame().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				handleGuiLoadGame();
+			}
+		});
+		
+		this.welcomeView.getBtnBrewConcoction().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//brew concoction
+			}
+		});
+		
+		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				p.getInventory().viewInventory(false);
+			}
+		});
+		
+		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JOptionPane.showMessageDialog(welcomeView,"YOUR SPELLBOOK");
+				
+				if(p.getSpellbook().isEmpty()) {
+					
+					JOptionPane.showMessageDialog(welcomeView,"No recipes discovered. Try brewing some potions in creative mode first!","Spellbook Registry", JOptionPane.WARNING_MESSAGE);
+				
+				}else {
+					
+					StringBuilder sb = new StringBuilder("Discovered Recipes\n\n");
+					ArrayList<Recipe> sortedRecipes = p.getSpellbook().getRecipeSorted();
+					
+					for (Recipe r : sortedRecipes) {
+						
+						sb.append(String.format(" [ID: # " + r.getConcoctionID() + "]" + r.getPotionName()));
+						sb.append(String.format(" (Base: " + r.getBase().getName()));
+						
+						sb.append(String.format(" | Fruits:" + r.getFruits() + ")\n"));
+						
+					}
+					
+					JOptionPane.showMessageDialog(welcomeView, sb.toString(), "Spellbook Unlocked", JOptionPane.INFORMATION_MESSAGE);
+					
+				}
+			}
+		});
+		
+		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				primaryMarket.visitMarket(p);
+			}
+		});
+		
+		this.welcomeView.getBtnBlessCauldron().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(p.getInventory().getUnusableCauldronsCount() == 0) {
+					BlessCauldron bless = new BlessCauldron();
+					}
+					if (p.getInventory().getUnusableCauldronsCount() > 0) {
+						BlessCauldron bless = new BlessCauldron();
+						bless.visitMenu(p);
+					}
+					
+					else {
+						JOptionPane.showMessageDialog(welcomeView, "\nYou have no cauldrons to bless in your inventory.", "Clinic Alert", JOptionPane.INFORMATION_MESSAGE);
+					}
+			}
+		});
+		
+		this.welcomeView.getBtnLoginBonus().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(p.hasClaimedBonus()) {
+					JOptionPane.showMessageDialog(welcomeView,"You have already claimed your log in bonus for the day","Claim Restriction",JOptionPane.WARNING_MESSAGE);
+				}else {
+					
+					Ingredients prizeItem = Ingredients.getRandomIngredient();
+					
+					p.getInventory().addIngredient(prizeItem, 1);
+					
+					p.setClaimedBonus(true);
+					
+					JOptionPane.showMessageDialog(welcomeView,"Success! You received 1x free [" + prizeItem.ingredientName + "]","Daily Claim Logged", JOptionPane.INFORMATION_MESSAGE);
+					refreshDashboardView();
+				}
+			}
+		});
+		
+		this.welcomeView.getBtnExitGame().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exitGame();
+			}
+		});
+		
+		this.welcomeView.setVisible(true);
+		
+	}
+	
+	/**
+	 * Provisions a brand new player profile file. 
+	 * Confirms overwriting options if a duplicate file name is detected, 
+	 * grants starting currency, and boots up the main dashboard menu.
+	 */
+	
+	public void handleGuiNewGame() {
+		
+		String name = JOptionPane.showInputDialog(welcomeView, "Enter your name:", "New Game Setup", JOptionPane.QUESTION_MESSAGE);
+		
+		if(name == null) return;
+		name = name.trim();
+		
+		if(name.isEmpty()) {
+			JOptionPane.showMessageDialog(welcomeView, "Name cannot be empty!","Validation Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		File file = new File(name + ".txt");
+		
+		if(file.exists()) {
+			
+			int overwriteChoice = JOptionPane.showConfirmDialog(welcomeView, "Save file exists. Overwrite?","Profile Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			
+			if (overwriteChoice != JOptionPane.YES_OPTION) {
+				return;
+			}
+		}
+		
+		this.p = new Player(name);
+		this.p.setCrystals(5000);
+		this.p.getUsableCauldrons();
+		this.p.getUnusableCauldrons();
+		
+		JOptionPane.showMessageDialog(welcomeView,"Welcome, " + p.getName() + " | Crystals: " + p.getCrystals(), "Success", JOptionPane.INFORMATION_MESSAGE);
+		
+		refreshDashboardView();
+		welcomeView.showDashboardPage();
+
+		
+	}
+	
+	/**
+	 *Searches for, validates, and parses an existing text-based profile file.
+	 * Reconstructs player details, inventory materials, currency balances, 
+	 * cauldron structures, and unlocked spellbook index states.
+	 */
+	
+	public void handleGuiLoadGame() {
+		String name = JOptionPane.showInputDialog(welcomeView, "Enter name of save file:", "Load Profile", JOptionPane.QUESTION_MESSAGE);
+		
+		if(name == null) return;
+		name = name.trim();
+		
+		if(name.isEmpty()) {
+			JOptionPane.showMessageDialog(welcomeView, "Save file name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		String fullPath = name + ".txt";
+		File file = new File(fullPath);
+			
+		if(!file.exists()) {
+			String[] options = {"Try Again","Start New Game"};
+			int selection = JOptionPane.showOptionDialog(welcomeView, "The file '" + name + ".txt' cannot be found", "File not found", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options);
+			
+			if (selection == 1) {
+				handleGuiNewGame();
+			}
+			
+			return;
+		}
+		
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+			String line;
+			
+			this.p = new Player("");
+			boolean parsingInventory = false;
+			boolean parsingSpellbook = false;
+			
+			while((line = reader.readLine()) != null) {
+				line = line.trim();
+				if(line.isEmpty()) continue;
+				
+				if(line.equalsIgnoreCase("[INVENTORY]")) {
+					parsingInventory = true;
+					parsingSpellbook = false;
+					continue;
+				}
+				
+				if(line.equalsIgnoreCase("[SPELLBOOK]")) {
+					parsingInventory = false;
+					parsingSpellbook = true;
+					continue;
+				}
+				
+				if(parsingInventory) {
+					if(line.contains("=")) {
+						String[] tokens = line.split("=");
+						String ingName = tokens[0].trim();
+						int quantity = Integer.parseInt(tokens[1].trim());
+						
+						if(quantity <= 0) continue;
+						
+						Ingredients factoryItem = new Ingredients(ingName, 100, 30);
+						
+						p.getInventory().addIngredient(factoryItem, quantity);
+					}
+				}else if (parsingSpellbook) {
+					String[] ids = line.split(",");
+					for(String idStr : ids) {
+						int recipeID = Integer.parseInt(idStr.trim());
+						for(Recipe r : recipeDB.getAllRecipes()) {
+							if (r.getConcoctionID() == recipeID) {
+								p.getSpellbook().addRecipe(r);
+								break;
+							}
+						}
+					}
+				}else if(line.contains("=")) {
+					String[] tokens = line.split("=");
+					String key = tokens[0].trim().toUpperCase();
+					String value = tokens[1].trim();
+					
+					switch(key) {
+					case "NAME":
+						p.setName(value);
+						break;
+					case "CRYSTALS":
+						p.setCrystals(Integer.parseInt(value));
+						break;
+					case "USABLE CAULDRONS":
+						int usableCount = Integer.parseInt(value);
+						
+						for(int i = 0; i <p.getInventory().getCauldrons().length; i++) {
+							p.getInventory().getCauldrons()[i] = null;
+						}
+						
+						for(int i = 0; i < usableCount; i++) {
+							p.getInventory().getCauldrons()[i] = new Cauldron(true);
+						}
+						break;
+					case "TOTAL CAULDRONS":
+						int totalCount = Integer.parseInt(value);
+						int currentUsable = p.getInventory().getUsableCauldronsCount();
+						
+						int brokenNeeded = totalCount - currentUsable;
+						for(int i = currentUsable; i < (currentUsable + brokenNeeded); i++) {
+							if(i < p.getInventory().getCauldrons().length) {
+								p.getInventory().getCauldrons()[i] = new Cauldron(false);
+							}
+						}
+						
+						break;
+					}
+					
+				}
+				
+			}
+			
+			
+			JOptionPane.showMessageDialog(welcomeView, "Save file for [" + p.getName() + "] has been succesfully loaded", "Success", JOptionPane.INFORMATION_MESSAGE);
+			
+			refreshDashboardView();
+			welcomeView.showDashboardPage();
+			
+		}catch(IOException | NumberFormatException e) {
+			JOptionPane.showMessageDialog(welcomeView, "Error reading save file, going back to menu", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+		
+	/**
+	 * Launches the central execution hub loop for gameplay options.
+	 * Redirects players to potion brewing actions, store systems, inventory metrics, 
+	 * and daily claim validation interfaces.
+	 */
+	
+	public void refreshDashboardView() {
+		if(this.p != null && this.welcomeView != null) {
+			
+			String statsSummary = "Name: " + this.p.getName() + "|| Crystals: " + this.p.getCrystals();
+			
+			this.welcomeView.updateStatusDisplay(statsSummary);
+		}
+	}
+	
+	/**
+	 * Saves the current runtime player properties back out to the configuration flat-file.
+	 */
+	
+	public void saveGame() {
+		
+		if(this.p == null) {
+			return;
+		}
+		
+		String fileName = p.getName() + ".txt";
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))){
+			
+			writer.write("NAME = " + p.getName()); writer.newLine();
+			writer.write("CRYSTALS = " + p.getCrystals()); writer.newLine();
+			writer.newLine();
+			
+			int usableCount = p.getInventory().getUsableCauldronsCount();
+			int unusableCount = p.getInventory().getUnusableCauldronsCount();
+			int totalCount = usableCount + unusableCount;
+			
+			writer.write("TOTAL CAULDRONS = " + totalCount); writer.newLine();
+			writer.write("USABLE CAULDRONS = " + usableCount); writer.newLine();
+			writer.newLine();
+			
+	        writer.newLine();
+
+			writer.write("[INVENTORY]"); writer.newLine();
+			
+			String[] appendixCItems = {"STRAWBERRY", "ORANGE","LEMON","BANANA","PINEAPPLE",
+					"KIWI","BLUEBERRY","COCONUT","SYRUP BASE","BUBBLE BASE","PERFUME BASE",
+					"MILK BASE","LOTION BASE" };
+			
+		
+			for(String itemName : appendixCItems) {
+				int currentQty = p.getInventory().getIngredientQty(itemName);
+				writer.write(itemName + " = " + currentQty);
+				writer.newLine();
+				}
+			
+			
+			writer.write("[SPELLBOOK]");writer.newLine();
+			ArrayList<Recipe> unlockedRecipes = p.getSpellbook().getRecipeSorted();
+			
+			ArrayList<String> idStrings = new ArrayList<>();
+			for(Recipe r : unlockedRecipes) {
+				idStrings.add(String.valueOf(r.getConcoctionID()));
+			}
+			writer.write(String.join(",", idStrings));
+			
+			JOptionPane.showMessageDialog(welcomeView, "File has been saved succesfully", "Save Status", JOptionPane.INFORMATION_MESSAGE);
+			
+		}catch(IOException e) {
+			JOptionPane.showMessageDialog(welcomeView, "Could not save file", "Error", JOptionPane.ERROR_MESSAGE);
+			bootUp();
+		}
+		
+	}
+	
+	/**
+	 * 
+	 */
+
+	public void exitGame() {
+		
+		if (this.p == null) {
+			System.exit(0);
+			return;
+		}
+		
+		StringBuilder overview = new StringBuilder();
+		
+		overview.append("Game Overview\n");
+		
+		overview.append("Player name: ").append(p.getName()).append("\n");
+		overview.append("Crsytals: ").append(p.getCrystals()).append("\n");
+		
+		overview.append("Discovered Recipes: \n");
+		if(p.getSpellbook().isEmpty()) {
+			overview.append("	(No recipes discovered yet)\n");
+		}else {
+			java.util.ArrayList<Recipe> sortedRecipes = p.getSpellbook().getRecipeSorted();
+			
+			for (Recipe r : sortedRecipes) {
+				overview.append(String.format(" - Recipe ID: #", r.getConcoctionID(), " (", r.getPotionName() ,")"));
+			}
+			
+		}
+		
+		overview.append("==============================\n");
+		overview.append("Saving process before quitting,,,\n");
+		System.out.println("Thanks for playing Potion Prodigy!");
+		saveGame();
+		
+	
+	}
+	
+}
