@@ -1,0 +1,45 @@
+package MCO2.view;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class SpellbookInterface extends JPanel {
+    private static final long serialVersionUID = 1L;
+    
+    private JTextArea txtSpellbookArea;
+    private JButton btnExitSpellbookHome;
+
+    
+    public SpellbookInterface() {
+        setLayout(null); 
+        setSize(588, 450);
+
+        JLabel lblTitle = new JLabel("--- YOUR SPELLBOOK ---");
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+        lblTitle.setBounds(150, 20, 300, 25);
+        add(lblTitle);
+
+       
+        txtSpellbookArea = new JTextArea();
+        txtSpellbookArea.setEditable(false);
+        txtSpellbookArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+        
+        JScrollPane scrollPane = new JScrollPane(txtSpellbookArea);
+        scrollPane.setBounds(50, 60, 488, 260);
+        add(scrollPane);
+
+        btnExitSpellbookHome = new JButton("Back to Main Menu");
+        btnExitSpellbookHome.setBounds(208, 347, 176, 51);
+        add(btnExitSpellbookHome);
+    }
+
+    public JButton getBtnExitSpellbookHome() {
+        return this.btnExitSpellbookHome;
+    }
+
+    
+    public void updateSpellbookDisplay(String content) {
+        this.txtSpellbookArea.setText(content);
+    }
+}
