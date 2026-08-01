@@ -1,7 +1,7 @@
-package MCO2;
+package MCO2.view;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 
 public class WelcomeInterface extends JFrame {
@@ -15,7 +15,6 @@ public class WelcomeInterface extends JFrame {
 	private JButton btnNewGame;
 	private JButton btnLoadGame;
 	
-	
 	private JPanel dashboardPagePanel;
 	private JLabel lblPlayerStatus;
 	private JButton btnBrewConcoction;
@@ -25,6 +24,9 @@ public class WelcomeInterface extends JFrame {
 	private JButton btnBlessCauldron;
 	private JButton btnLoginBonus;
 	private JButton btnExitGame;
+	
+	//spellbook
+	private SpellbookInterface spellbookCard;
 
 	/**
 	 * Create the frame.
@@ -38,6 +40,16 @@ public class WelcomeInterface extends JFrame {
 		cardLayout = new CardLayout();
 		mainContainerPanel = new JPanel(cardLayout);
 		setContentPane(mainContainerPanel);
+		
+		//spellbook
+		
+		try {
+			spellbookCard = new SpellbookInterface();
+		} catch (Exception npe) {
+			spellbookCard = new SpellbookInterface();
+		}
+		
+		mainContainerPanel.add(spellbookCard, "SPELLBOOK_PAGE");
 		
 		//page1
 		
@@ -67,7 +79,7 @@ public class WelcomeInterface extends JFrame {
         lblPlayerStatus = new JLabel("Welcome to the Main Menu!");
         lblPlayerStatus.setHorizontalAlignment(SwingConstants.CENTER);
         lblPlayerStatus.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-        lblPlayerStatus.setBounds(141, 27, 300, 20);
+        lblPlayerStatus.setBounds(67, 28, 452, 20);
         dashboardPagePanel.add(lblPlayerStatus);
 
         btnBrewConcoction = new JButton("Brew Concoction");
@@ -99,14 +111,37 @@ public class WelcomeInterface extends JFrame {
         dashboardPagePanel.add(btnExitGame);
         
         mainContainerPanel.add(dashboardPagePanel, "DASHBOARD_PAGE");
+        
+        cardLayout.show(mainContainerPanel, "WELCOME_PAGE");
     }
 	
 	public void showWelcomePage() {
-		cardLayout.show(mainContainerPanel, "WELCOME_PAGE");
+		if(this.cardLayout != null && this.mainContainerPanel != null) {
+			// Show the welcome page
+			cardLayout.show(this.mainContainerPanel, "WELCOME_PAGE");
+		}
 	}
 	
 	public void showDashboardPage() {
-		cardLayout.show(mainContainerPanel, "DASHBOARD_PAGE");
+		if(this.cardLayout != null && this.mainContainerPanel != null) {
+			// Show the dashboard page
+			cardLayout.show(this.mainContainerPanel, "DASHBOARD_PAGE");
+			this.mainContainerPanel.revalidate();
+			this.mainContainerPanel.repaint();
+		}
+	}
+	
+	public void showSpellbookPage() {
+		if(this.cardLayout != null && this.mainContainerPanel != null) {
+			// Show the spellbook page
+			cardLayout.show(mainContainerPanel, "SPELLBOOK_PAGE");
+			this.mainContainerPanel.revalidate();
+			this.mainContainerPanel.repaint();
+		}
+	}
+	
+	public SpellbookInterface getSpellbookCard() {
+		return this.spellbookCard;
 	}
 	
 	public JButton getBtnNewGame() {
@@ -144,6 +179,7 @@ public class WelcomeInterface extends JFrame {
 	public JButton getBtnExitGame() {
 		return this.btnExitGame;
 	}
+	
 	
 	public void updateStatusDisplay(String text) {
 		this.lblPlayerStatus.setText(text);
