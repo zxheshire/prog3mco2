@@ -18,8 +18,6 @@ import javax.swing.JOptionPane;
 public class gameStart {
 	
 	private Player p;
-	private Scanner scanner;
-	private boolean isRunning;
 	private RecipeDatabase recipeDB;
 	private Market primaryMarket;
 	
@@ -31,7 +29,6 @@ public class gameStart {
 	 */
 	
 	public gameStart() {
-		this.scanner = new Scanner(System.in);
 		this.recipeDB = new RecipeDatabase();
 		this.primaryMarket = new Market();
 	}
@@ -168,7 +165,11 @@ public class gameStart {
 		this.welcomeView.getBtnExitGame().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int exitChoice = JOptionPane.showConfirmDialog(welcomeView, "Are you sure you want to exit the application?", "Exit game", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+				
+				if(exitChoice == JOptionPane.YES_OPTION) {
 				exitGame();
+				}
 			}
 		});
 		
@@ -455,6 +456,8 @@ public class gameStart {
 		overview.append("Saving process before quitting,,,\n");
 		System.out.println("Thanks for playing Potion Prodigy!");
 		saveGame();
+		
+		System.exit(0);
 		
 	
 	}
