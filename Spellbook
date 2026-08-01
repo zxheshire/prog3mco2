@@ -1,0 +1,51 @@
+package MCO2.model;
+
+import java.util.*;
+
+public class Spellbook {
+	private ArrayList<Recipe> unlockedRecipes;
+	
+	public Spellbook() {
+		
+		this.unlockedRecipes = new ArrayList<>();
+	
+	}
+	
+	public void addRecipe(Recipe recipe) {
+	
+		if(recipe != null && !isRecipeUnlocked(recipe.getConcoctionID())) {
+			this.unlockedRecipes.add(recipe);
+			System.out.println("Added new recipe");
+		}
+		
+	}
+	
+	public ArrayList <Recipe> getRecipeSorted(){
+		
+		ArrayList<Recipe> sortedList = new ArrayList<>(this.unlockedRecipes);
+		
+		java.util.Collections.sort(sortedList, new Comparator<Recipe>(){
+			@Override
+			public int compare (Recipe r1, Recipe r2) {
+				return Integer.compare(r1.getConcoctionID(), r2.getConcoctionID());
+			}
+		});
+		
+		return sortedList;
+	}
+	
+	public boolean isRecipeUnlocked (int targetID) {
+		
+		for(Recipe r : this.unlockedRecipes) {
+			if(r.getConcoctionID() == targetID) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isEmpty() {
+		return this.unlockedRecipes.isEmpty();
+	}
+	
+}
