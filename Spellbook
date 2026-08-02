@@ -1,15 +1,31 @@
+/**
+* Tracks the players discovered recipes
+* or which recipes the player has unlocked
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.model;
 
 import java.util.*;
 
+/**
+* Tracks which potion recipes a player has unlocked
+*/
+
 public class Spellbook {
 	private ArrayList<Recipe> unlockedRecipes;
+
+// Create an empty spellbook with no unlocked recipes
 	
 	public Spellbook() {
 		
 		this.unlockedRecipes = new ArrayList<>();
 	
 	}
+
+// Adds the given recipe to the spellbook if it isn't already unlocked
 	
 	public void addRecipe(Recipe recipe) {
 	
@@ -19,6 +35,8 @@ public class Spellbook {
 		}
 		
 	}
+
+// Returns a copy of the unlocked recipes, sorted ascending by concoction ID
 	
 	public ArrayList <Recipe> getRecipeSorted(){
 		
@@ -33,6 +51,8 @@ public class Spellbook {
 		
 		return sortedList;
 	}
+
+// Returns true if a recipe with the given concoction ID is already unlocked
 	
 	public boolean isRecipeUnlocked (int targetID) {
 		
@@ -43,6 +63,8 @@ public class Spellbook {
 		}
 		return false;
 	}
+
+// Returns true if no recipes have been unlocked yet
 	
 	public boolean isEmpty() {
 		return this.unlockedRecipes.isEmpty();
