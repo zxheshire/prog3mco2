@@ -1,3 +1,9 @@
+/* Manages the Sell Ingredients interface
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
+
 package MCO2.view;
 
 import javax.swing.*;
@@ -17,6 +23,9 @@ public class SellView extends JPanel {
     private Market market;
     private Player player;
 
+/*
+* Displays the overall Sell Ingredients Panel
+*/
     public SellView(Market market) {
 
         this.market = market;
@@ -78,6 +87,9 @@ public class SellView extends JPanel {
         btnSell.addActionListener(e -> SellSelected());
     }
 
+/*
+* Loads the player's available ingredients that can be sold
+*/
     public void loadInventory() {
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -105,6 +117,11 @@ public class SellView extends JPanel {
         }
     }
 
+/*
+* Sells the Selected or Entered quantity of the Ingredient
+* Checks if entered quantity is valid or not
+* Updates the player's balance once sold
+*/
     private void SellSelected() {
 
         boolean SoldSomething = false;
@@ -139,7 +156,8 @@ public class SellView extends JPanel {
         lblBalance.setText("Balance: " + player.getCrystals());
         loadInventory();
     }
-    
+
+    // Updates player's balance and inventory
     public void setPlayer(Player player) {
         this.player = player;
 
@@ -147,7 +165,8 @@ public class SellView extends JPanel {
 
         loadInventory();
     }
-    
+
+    //back
     public JButton getBtnBack() {
         return btnBack;
     }
