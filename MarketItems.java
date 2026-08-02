@@ -1,4 +1,4 @@
-package MCO1;
+package MCO2.model;
 
 public class MarketItems {
 	
