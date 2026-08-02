@@ -32,6 +32,17 @@ public class WelcomeInterface extends JFrame {
 	private RecipeBrewInterface recipeBrewCard;
 	private CreativeBrewInterface creativeBrewCard;
 
+	//For market Interface
+	private MarketInterface marketView;
+	private BuyView buyView;
+	private SellView sellView;
+	
+	//For inventory Interface
+	private InventoryInterface inventoryView;
+	
+	//for bless cauldron interface
+	private BlessCauldronView blessView;
+
 	/**
 	 * Create the frame.
 	 */
@@ -181,7 +192,76 @@ public class WelcomeInterface extends JFrame {
 	public CreativeBrewInterface getCreativeBrewCard() {
 		return this.creativeBrewCard;
 	}
+
+	//For Market Interface
+	public void showMarketView() {
+	    cardLayout.show(mainContainerPanel, "MARKET_PAGE");
+	}
 	
+	public MarketInterface getMarketView() {
+	    return marketView;
+	}
+	
+	//For Market Buy Ingredients Interface
+	public void createBuyView(Market market) {
+	    buyView = new BuyView(market);
+	    mainContainerPanel.add(buyView, "BUY_PAGE");
+	}
+	
+	public void showBuyView() {
+	    buyView.loadMarket();
+	    cardLayout.show(mainContainerPanel, "BUY_PAGE");
+	}
+
+	public BuyView getBuyView() {
+	    return buyView;
+	}
+	
+	//For Market Sell Ingredients Interface
+	public void createSellView(Market market) {
+	    sellView = new SellView(market);
+	    mainContainerPanel.add(sellView, "SELL_PAGE");
+	}
+	
+	public void showSellView() {
+	    sellView.loadInventory();
+	    cardLayout.show(mainContainerPanel, "SELL_PAGE");
+	}
+
+	public SellView getSellView() {
+	    return sellView;
+	}
+	
+	//For Inventory Interface
+	public void createInventoryView() {
+	    inventoryView = new InventoryInterface();
+	    mainContainerPanel.add(inventoryView, "INVENTORY_PAGE");
+	}
+
+	public void showInventoryView() {
+	    inventoryView.loadInventory();
+	    cardLayout.show(mainContainerPanel, "INVENTORY_PAGE");
+	}
+
+	public InventoryInterface getInventoryView() {
+	    return inventoryView;
+	}
+	
+	//For Bless Cauldron Interface
+		public void createBlessView() {
+			blessView = new BlessCauldronView();
+		    mainContainerPanel.add(blessView, "BLESS_CAULDRON_PAGE");
+		}
+
+		public void showBlessView() {
+		    blessView.loadInventory();
+		    cardLayout.show(mainContainerPanel, "BLESS_CAULDRON_PAGE");
+		}
+
+		public BlessCauldronView getBlessView() {
+		    return blessView;
+		}
+
 	public JButton getBtnNewGame() {
 		return this.btnNewGame;
 	}
