@@ -1,3 +1,11 @@
+/**
+* Main controller for the whole program. Holds the GUI buttons/
+* listeners to the game logic and handles new game, save/load, and exit game
+* authors: Ysha Nacpil and Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.controller;
 
 import MCO2.model.*;
@@ -8,7 +16,6 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
 
-
 public class gameStart {
 	
 	private Player p;
@@ -17,28 +24,30 @@ public class gameStart {
 	
 	private WelcomeInterface welcomeView;
 	
-	/**Initializes a new game controller session.
-	 * Sets up the input scanner, marks the game state as running, 
-	 * and loads blank database and market instances.
-	 */
+/**
+* Initializes a new game controller session.
+* Sets up the input scanner, marks the game state as running, 
+* and loads blank database and market instances.
+*/
 	
 	public gameStart() {
 		this.recipeDB = new RecipeDatabase();
 		this.primaryMarket = new Market();
 	}
 	
-	/**
-	 * Loads the master recipe database from an external CSV file.
-	 * @param csvPath  is the file path
-	 */
+/**
+* Loads the master recipe database from an external CSV file.
+* @param csvPath  is the file path
+*/
 	
 	public void initializeRecipes(String csvPath) {
 		this.recipeDB.loadPCcsv(csvPath);
 	}
 	
-	/* Displays the welcome screen and handles the primary entry choices 
-	 * to either start a brand new game session or restore an old one.
-	 */
+/**
+* Displays the welcome screen and handles the primary entry choices 
+* to either start a brand new game session or restore an old one.
+*/
 	
 	public void bootUp() {
 		
@@ -69,6 +78,7 @@ public class gameStart {
 		
 	}
 	
+// Handles the New Game button at the main page
 
 	private void setupNewGameButton() {
 		this.welcomeView.getBtnNewGame().addActionListener(new ActionListener() {
@@ -78,7 +88,9 @@ public class gameStart {
 			}
 		});
 	}
-	
+
+// Handles the Load Game button at the main page
+
 	private void setupLoadGameButton() {
 		this.welcomeView.getBtnLoadGame().addActionListener(new ActionListener() {
 			@Override
@@ -87,6 +99,11 @@ public class gameStart {
 			}
 		});
 	}
+
+/**
+* Handles the Brew Concoction button, also checks cauldron availability
+*  lets the player pick Recipe Mode or Creative Mode and opens the brewing page
+*/
 	
 	private void setupBrewConcoctionButton() {
 		this.welcomeView.getBtnBrewConcoction().addActionListener(new ActionListener() {
@@ -124,7 +141,9 @@ public class gameStart {
 			}
 		});
 	}
-	
+
+// Hanldes the Check Inventory button, allows player to open their Inventory Interface
+
 	private void setupCheckInventoryButton() {
 		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
 			@Override
@@ -135,6 +154,11 @@ public class gameStart {
 			}
 		});
 	}
+
+/**
+* Handles the Check Spellbook button and displays the discovered recipes, also
+*  connects the spellbook page's exit to return to the dashboard
+*/
 	
 	private void setupCheckSpellbookButton() {
 		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
@@ -174,6 +198,11 @@ public class gameStart {
 			}
 		});
 	}
+
+/**
+* Handles the Visit Market button and opens the interface for the market page
+* also handles the market page's exit button to return to the dashboard
+*/
 	
 	private void setupVisitMarketButton() {
 		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
@@ -193,6 +222,11 @@ public class gameStart {
 			}
 		});
 	}
+
+/**
+* Handles the Bless Cauldron button and opens the cauldron-repair interface
+* if the player has damaged cauldrons
+*/
 	
 	private void setupBlessCauldronButton() {
 		this.welcomeView.getBtnBlessCauldron().addActionListener(new ActionListener() {
@@ -211,6 +245,8 @@ public class gameStart {
 			}
 		});
 	}
+
+// Handles the Login Bonus button and gives the player one free random item per login
 	
 	private void setupLoginBonusButton() {
 		this.welcomeView.getBtnLoginBonus().addActionListener(new ActionListener() {
@@ -232,6 +268,8 @@ public class gameStart {
 			}
 		});
 	}
+
+// Handles the Exit Game button to confirm, then save and quit via exitGame()
 	
 	private void setupExitGameButton() {
 		this.welcomeView.getBtnExitGame().addActionListener(new ActionListener() {
@@ -245,7 +283,12 @@ public class gameStart {
 			}
 		});
 	}
-	
+
+/** 
+*Handles the Creative Mode Brew button, validates ingredient/cauldron availability
+* lets the user brew potions and reports if it was success or a failure and waste
+*/
+
 	private void setupCreativeBrewView() {
 		this.welcomeView.getCreativeBrewCard().getBtnCreativeBrewConcoction().addActionListener(new ActionListener() {
 			@Override
@@ -292,6 +335,11 @@ public class gameStart {
 			}
 		});
 	}
+
+/**
+* Handles the Recipe Mode Brew Selected Recipe and Exit buttons, validates
+* selection and cauldron availability, then attempts to brew
+*/
 	
 	private void setupRecipeBrewView() {
 
@@ -331,11 +379,12 @@ public class gameStart {
 	    });
 	}
 
-//For Market Buy Ingredients Interface
-	/**
-	 * Shows the market page, and pops a notice if the market restocked
-	 * since the last time this was checked.
-	 */
+/**
+* For Market Buy Ingredients Interface
+* Shows the market page, and pops a notice if the market restocked
+* since the last time this was checked.
+*/
+
 	private void showMarketPage() {
 	    primaryMarket.checkAndRefreshIfNeeded();
 	    
@@ -348,6 +397,8 @@ public class gameStart {
 	            JOptionPane.INFORMATION_MESSAGE);
 	    }
 	}
+
+// Sets up the Buy view for the current player and handles the Buy and Back buttons
 	
 	private void setupBuyView() {
 
@@ -375,7 +426,11 @@ public class gameStart {
 	    });
 	}
 	
-	//For Market Sell Ingredients Interface
+/**
+* For Market Sell Ingredients Interface
+* Sets up the Sell view for the current player and handles the Sell and Back button
+/*
+
 	private void setupSellView() {
 
 	    welcomeView.createSellView(primaryMarket);
@@ -395,7 +450,11 @@ public class gameStart {
 	    });
 	}
 	
-	//For Inventory Interface
+/**
+* For Inventory Interface
+* Sets up the Inventory view for the current player and handles the buttons 
+*/
+
 	private void setupInventoryView() {
 
 	    welcomeView.createInventoryView();
@@ -415,7 +474,11 @@ public class gameStart {
 	    });
 	}
 	
-	//for bless cauldron view
+/**
+* for bless cauldron view
+* Sets up the bless Cauldron view for the current player and wires its buttons
+*/
+
 	private void setupBlessView() {
 
 	    welcomeView.createBlessView();
@@ -435,12 +498,11 @@ public class gameStart {
 	    });
 	}
 	
-	
-	/**
-	 * Provisions a brand new player profile file. 
-	 * Confirms overwriting options if a duplicate file name is detected, 
-	 * grants starting currency, and boots up the main dashboard menu.
-	 */
+/**
+* Provisions a brand new player profile file. 
+* Confirms overwriting options if a duplicate file name is detected, 
+* grants starting currency, and boots up the main dashboard menu.
+*/
 	
 	public void handleGuiNewGame() {
 		
@@ -480,11 +542,11 @@ public class gameStart {
 
 	}
 	
-	/**
-	 *Searches for, validates, and parses an existing text-based profile file.
-	 * Reconstructs player details, inventory materials, currency balances, 
-	 * cauldron structures, and unlocked spellbook index states.
-	 */
+/**
+*Searches for, validates, and parses an existing text-based profile file.
+* Reconstructs player details, inventory materials, currency balances, 
+* cauldron structures, and unlocked spellbook index states.
+*/
 	
 	public void handleGuiLoadGame() {
 		String name = JOptionPane.showInputDialog(welcomeView, "Enter name of save file:", "Load Profile", JOptionPane.QUESTION_MESSAGE);
@@ -614,11 +676,11 @@ public class gameStart {
 		}
 	}
 		
-	/**
-	 * Launches the central execution hub loop for gameplay options.
-	 * Redirects players to potion brewing actions, store systems, inventory metrics, 
-	 * and daily claim validation interfaces.
-	 */
+/**
+* Launches the central execution hub loop for gameplay options.
+* Redirects players to potion brewing actions, store systems, inventory metrics, 
+* and daily claim validation interfaces.
+*/
 	
 	public void refreshDashboardView() {
 		if(this.p != null && this.welcomeView != null) {
@@ -629,9 +691,9 @@ public class gameStart {
 		}
 	}
 	
-	/**
-	 * Saves the current runtime player properties back out to the configuration flat-file.
-	 */
+/**
+* Saves the current runtime player properties back out to the configuration flat-file.
+*/
 	
 	public void saveGame() {
 		
@@ -688,9 +750,10 @@ public class gameStart {
 		
 	}
 	
-	/**
-	 * 
-	 */
+/**
+* Builds a summary of the player's session (name, crystals, discovered
+* recipes), saves the game, and terminates the application
+*/
 
 	public void exitGame() {
 		
