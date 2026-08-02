@@ -13,7 +13,7 @@ public class Cauldron {
 	public static int price = 3000;
 	public static int blessPrice = 1000;
 	
-	Cauldron(boolean usable) {
+	public Cauldron(boolean usable) {
 		this.isUsable = usable;
 	}
 	
