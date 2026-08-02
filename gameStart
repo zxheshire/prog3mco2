@@ -114,9 +114,7 @@ public class gameStart {
 		
 		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				
-				JOptionPane.showMessageDialog(welcomeView,"YOUR SPELLBOOK");
+			public void actionPerformed(ActionEvent e) {
 				
 				if(p.getSpellbook().isEmpty()) {
 					
@@ -146,7 +144,7 @@ public class gameStart {
 		
 		this.welcomeView.getSpellbookCard().getBtnExitSpellbookHome().addActionListener(new java.awt.event.ActionListener() {
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				welcomeView.showDashboardPage();
 			}
 		});
