@@ -97,6 +97,11 @@ public class WelcomeInterface extends JFrame {
 		mainContainerPanel.add(recipeBrewCard, "RECIPE_BREW_PAGE");
 		mainContainerPanel.add(creativeBrewCard, "CREATIVE_BREW_PAGE");
 		
+		//market
+		
+		marketView = new MarketInterface();
+		mainContainerPanel.add(marketView, "MARKET_PAGE");
+		
 		//page1
 		
 		welcomePagePanel = new JPanel();
