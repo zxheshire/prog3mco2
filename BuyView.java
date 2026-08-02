@@ -1,3 +1,8 @@
+/* Manages the Buy Ingredients Interface
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.view;
 
 import javax.swing.*;
@@ -17,6 +22,7 @@ public class BuyView extends JPanel {
     private Market market;
     private Player player;
 
+// Displays the overall Buy Ingredient panel 
     public BuyView(Market market) {
 
         this.market = market;
@@ -79,6 +85,10 @@ public class BuyView extends JPanel {
         btnBuy.addActionListener(e -> buySelected());
     }
 
+/* 
+* Loads in the Market Items available to buy 
+* and replaces them with SOLD OUT once bought
+*/
     public void loadMarket() {
 
         DefaultTableModel model =
@@ -103,6 +113,10 @@ public class BuyView extends JPanel {
         }
     }
 
+/* 
+* Checks if the item the player will buy is valid or not
+* Displays text if purchased successfully or invalid item
+*/
     private void buySelected() {
 
         boolean boughtSomething = false;
@@ -127,14 +141,18 @@ public class BuyView extends JPanel {
         lblBalance.setText("Balance: " + player.getCrystals());
         loadMarket();
     }
-    
+
+/*
+* Updates the Player's Inventory and balance
+*/
     public void setPlayer(Player player) {
         this.player = player;
 
         lblBalance.setText(
             "Balance: " + player.getCrystals());
     }
-    
+
+// back
     public JButton getBtnBack() {
         return btnBack;
     }
