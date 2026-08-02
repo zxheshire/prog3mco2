@@ -27,6 +27,10 @@ public class WelcomeInterface extends JFrame {
 	
 	//spellbook
 	private SpellbookInterface spellbookCard;
+	
+	//brew
+	private RecipeBrewInterface recipeBrewCard;
+	private CreativeBrewInterface creativeBrewCard;
 
 	/**
 	 * Create the frame.
@@ -50,6 +54,14 @@ public class WelcomeInterface extends JFrame {
 		}
 		
 		mainContainerPanel.add(spellbookCard, "SPELLBOOK_PAGE");
+		
+		//brew
+		
+		recipeBrewCard = new RecipeBrewInterface();
+		creativeBrewCard = new CreativeBrewInterface();
+		
+		mainContainerPanel.add(recipeBrewCard, "RECIPE_BREW_PAGE");
+		mainContainerPanel.add(creativeBrewCard, "CREATIVE_BREW_PAGE");
 		
 		//page1
 		
@@ -140,8 +152,34 @@ public class WelcomeInterface extends JFrame {
 		}
 	}
 	
+	public void showRecipeBrewPage() {
+		if(this.cardLayout != null && this.mainContainerPanel != null) {
+			// Show the recipe brew page
+			cardLayout.show(mainContainerPanel, "RECIPE_BREW_PAGE");
+			this.mainContainerPanel.revalidate();
+			this.mainContainerPanel.repaint();
+		}
+	}
+	
+	public void showCreativeBrewPage() {
+		if(this.cardLayout != null && this.mainContainerPanel != null) {
+			// Show the creative brew page
+			cardLayout.show(mainContainerPanel, "CREATIVE_BREW_PAGE");
+			this.mainContainerPanel.revalidate();
+			this.mainContainerPanel.repaint();
+		}
+	}
+	
 	public SpellbookInterface getSpellbookCard() {
 		return this.spellbookCard;
+	}
+	
+	public RecipeBrewInterface getRecipeBrewCard() {
+		return this.recipeBrewCard;
+	}
+	
+	public CreativeBrewInterface getCreativeBrewCard() {
+		return this.creativeBrewCard;
 	}
 	
 	public JButton getBtnNewGame() {
