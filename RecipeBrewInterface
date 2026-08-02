@@ -1,5 +1,19 @@
+/**
+* Recipe Mode interface for Brew concoctiom
+* that lets player brew concoction from
+* known recipes
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 import javax.swing.*;
 import java.awt.*;
+
+/**
+ * Panel for brewing potions from known recipes, letting the player pick a
+ * recipe from a list and brew it or return to the main dashboard.
+ */
 
 public class RecipeBrewInterface extends JPanel {
 
@@ -9,6 +23,11 @@ public class RecipeBrewInterface extends JPanel {
 	private DefaultListModel<String> recipeListModel;
 	private JButton btnBrewSelectedRecipe;
 	private JButton btnExitRecipeBrew;
+
+/**
+* Create the panel.
+* Builds the title label, scrollable recipe list, and the brew/back buttons.
+*/
 	
 	public RecipeBrewInterface() {
 		
@@ -36,18 +55,26 @@ public class RecipeBrewInterface extends JPanel {
 		add(btnExitRecipeBrew);
 
 	}
+
+// Returns the "Brew Selected Recipe" button
 	
 	public JButton getBtnBrewSelectedRecipe() {
 		return this.btnBrewSelectedRecipe;
 	}
+
+// Returns the "Back to Main Menu" button
 	
 	public JButton getBtnExitRecipeBrew() {
 		return this.btnExitRecipeBrew;
 	}
+
+// Returns the JList displaying available recipes
 	
 	public JList<String> getRecipeList() {
 		return this.recipeList;
 	}
+
+// Returns the list model backing the recipe list
 	
 	public DefaultListModel<String> getRecipeListModel() {
 		return this.recipeListModel;
