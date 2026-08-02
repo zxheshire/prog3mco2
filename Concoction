@@ -1,0 +1,125 @@
+package MCO2.model;
+
+import java.util.*;
+
+import MCO2.controller.*;
+
+public class Concoction {
+
+	private int concoctionID;
+	private String name;
+	private int sellPrice;
+	
+	public Concoction()
+	{
+		this.concoctionID = 0;
+		this.name = "";
+		this.sellPrice = 0;
+	}
+	
+	public Concoction(Recipe recipe) {
+		if (recipe != null) {
+			this.concoctionID =	recipe.getConcoctionID();
+			this.name = recipe.getPotionName();
+			this.sellPrice = recipe.getSellingPrice();
+		}
+	}
+	
+	public boolean recipeMode(Player p, Recipe targetRecipe) {
+		if(targetRecipe == null) return false;
+		
+		String baseNeeded = targetRecipe.getBase().getName();
+		ArrayList<String> fruitsNeeded = targetRecipe.getFruits();
+		Inventory inv = p.getInventory();
+		
+		if(inv.getIngredientQty(baseNeeded) < 1) return false;
+			for(String fruit : fruitsNeeded) {
+				if(inv.getIngredientQty(fruit) < 1)return false;
+				
+			}
+		
+		if(inv.getIngredientQty(baseNeeded) >= 1) {
+			for(int i = 0; i < inv.getItems().length; i++) {
+				if(inv.getItems()[i] != null && inv.getItems()[i].getIngredient().getIngredientName().equalsIgnoreCase(baseNeeded)) {
+					inv.removeIngredient(i, 1);
+					break;
+				}
+			}
+		}
+		
+		for(String targetFruit : fruitsNeeded) {
+			for(int i = 0; i < inv.getItems().length; i++) {
+				if(inv.getItems()[i] != null && inv.getItems()[i].getIngredient().getIngredientName().equalsIgnoreCase(targetFruit)) {
+					inv.removeIngredient(i, 1);
+					break;
+				}
+			}
+		}
+		inv.compactInventory();
+		
+		this.concoctionID = targetRecipe.getConcoctionID();
+		this.name = targetRecipe.getPotionName();
+		this.sellPrice = targetRecipe.getSellingPrice();
+		
+		p.addCrystals(this.sellPrice);
+		return true;
+		
+	}
+	
+	public Recipe creativeMode(Player p, RecipeDatabase db, String baseName, ArrayList<String> chosenFruits) {
+		Inventory inv = p.getInventory();
+		
+		
+		if(inv.getIngredientQty(baseName) < 1) return null;
+		for (String f :chosenFruits) {
+			if(inv.getIngredientQty(f) < 1) return null;
+		}
+		
+		for(int i = 0; i < inv.getItems().length; i++) {
+			if(inv.getItems()[i] != null && inv.getItems()[i].getIngredient().getIngredientName().equalsIgnoreCase(baseName)) {
+				inv.removeIngredient(i, 1);
+				break;
+			}
+		}
+		
+		for(String f : chosenFruits) {
+			for(int i = 0; i < inv.getItems().length; i++) {
+				if(inv.getItems()[i] != null && inv.getItems()[i].getIngredient().getIngredientName().equalsIgnoreCase(f)) {
+					inv.removeIngredient(i, 1);
+					break;
+				}
+			}
+		}
+		inv.compactInventory();
+		
+		ConcoctionBase chosenBaseObj = new ConcoctionBase(baseName);
+		Recipe matchedBlueprint = db.validateMix(chosenBaseObj, chosenFruits);
+		
+		if(matchedBlueprint != null) {
+			this.concoctionID = matchedBlueprint.getConcoctionID();
+			this.name = matchedBlueprint.getPotionName();
+			this.sellPrice = matchedBlueprint.getSellingPrice();
+			
+			p.addCrystals(this.sellPrice);
+			p.getSpellbook().addRecipe(matchedBlueprint);
+			
+			return matchedBlueprint;
+		}else {
+			p.breakCauldron();
+			return null;
+		}
+		
+	}
+	
+	public int getConcoctionID() {
+		return concoctionID;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getSellPrice() {
+		return sellPrice;
+	}
+}
