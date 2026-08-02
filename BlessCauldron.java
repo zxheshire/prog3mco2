@@ -1,3 +1,9 @@
+/* Manages the blessing of cauldrons (turning unusuable cauldrons to usable ones at a cost)
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
+
 package MCO2.controller;
 
 import java.util.*;
@@ -8,6 +14,10 @@ public class BlessCauldron {
 	private int numUnusable;
 	private int numUsable;
 
+/*
+* This code manages the menu for this class.
+* It's the code where the broken cauldron gets blessed.
+*/
 	public void visitMenu(Player p) {
 		boolean blessing = true;
 		Scanner scn = new Scanner(System.in);
@@ -80,7 +90,11 @@ public class BlessCauldron {
 		
 		 
 	}
-	
+
+/*
+* This code is for the Bless Cauldron Interface
+* Searches the inventory for a broken cauldron then blesses them according to the inputted quantity.
+*/
 	  public boolean blessCauldrons(Player p, int qty) {
 
 	        int broken = p.getInventory().getUnusableCauldronsCount();
