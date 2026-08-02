@@ -1,3 +1,8 @@
+/* Manages the Ingredients of the game
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.model;
 
 import java.util.Random;
@@ -55,11 +60,12 @@ public class Ingredients {
 	}
 	
 	public static Ingredients getRandomIngredient() {
-		Random rnd = new Random();
-		
-		String[] options = {"STRAWBERRY", "ORANGE", "LEMON", "BANANA", "MANGO", "PINEAPPLE","KIWI","BLUEBERRY", "COCONUT", "SYRUP BASE", "BUBBLE BASE", "PERFUME BASE", "MILK BASE", "LOTION BASE"};
-		int index = rnd.nextInt(options.length);
-		
-		return new Ingredients(options[index], 100, 30);
+	    Random rnd = new Random();
+
+	    if (ingList[0] == null) {
+	        initializeIngredients();
+	    }
+
+	    return ingList[rnd.nextInt(ingList.length)];
 	}
 }
