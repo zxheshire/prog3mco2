@@ -1,3 +1,9 @@
+/* Manages the Market Items
+* @authr Ysha Nacpil
+* @version 1.0
+* @since 2026 
+*/
+
 package MCO2.model;
 
 public class MarketItems {
