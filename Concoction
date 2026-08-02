@@ -1,3 +1,12 @@
+/**
+* Concoction class represents a brewed potion
+* and the logic for brewing it either from a chosen
+* recipe or from a freely chosen base/fruit combination
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.model;
 
 import java.util.*;
@@ -9,6 +18,8 @@ public class Concoction {
 	private int concoctionID;
 	private String name;
 	private int sellPrice;
+
+// Create an empty, unbrewed concoction
 	
 	public Concoction()
 	{
@@ -16,6 +27,8 @@ public class Concoction {
 		this.name = "";
 		this.sellPrice = 0;
 	}
+
+// Create a concoction pre-filled with the given recipe's ID, name, and sell price
 	
 	public Concoction(Recipe recipe) {
 		if (recipe != null) {
@@ -24,6 +37,13 @@ public class Concoction {
 			this.sellPrice = recipe.getSellingPrice();
 		}
 	}
+
+/**
+* Brews the given recipe if the player has all required ingredients:
+* consumes the base and fruits from inventory, sets this concoction's
+* fields to the recipe's values, credits the player with the sell price,
+* and increments the market's brew count.
+*/
 	
 	public boolean recipeMode(Player p, Market marketInstance, Recipe targetRecipe) {
 		if(targetRecipe == null) return false;
@@ -68,6 +88,14 @@ public class Concoction {
 		return true;
 		
 	}
+
+/**
+* Attempts a freeform brew: consumes the chosen base and fruits from the
+* player's inventory if available, then checks the recipe database for a
+* matching recipe. On a match, updates this concoction's fields, credits
+* the player, and unlocks the recipe in their spellbook. On no match,
+* breaks one of the player's cauldrons instead
+*/
 	
 	public Recipe creativeMode(Player p, RecipeDatabase db, String baseName, Market marketInstance, ArrayList<String> chosenFruits) {
 		Inventory inv = p.getInventory();
@@ -113,14 +141,20 @@ public class Concoction {
 		}
 		
 	}
+
+// Returns the concoction's ID
 	
 	public int getConcoctionID() {
 		return concoctionID;
 	}
+
+// Returns the concoction's name
 	
 	public String getName() {
 		return name;
 	}
+
+// Returns the concoction's sell price
 	
 	public int getSellPrice() {
 		return sellPrice;
