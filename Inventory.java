@@ -1,15 +1,23 @@
+/* Manages the Inventory of the player
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.model;
 
 public class Inventory {
+// Player inventory is categorized into two: ingredients and cauldrons
 	public InventoryItem items[] = new InventoryItem[99];
 	public Cauldron cauldrons[] = new Cauldron[99];
-	
+
+// Upon player creation, adds 3 usable cauldrons via cauldrons[]
 	public Inventory() {
 		for (int i=0; i<3; i++) {
 			cauldrons[i] = new Cauldron(true);	
 		}
 	}
-	
+
+// Method used to add a selected ingredient into the inventory
 	public void addIngredient(Ingredients item, int qty) {
 		for (int i=0; i < items.length; i++) {
 			if (items[i] == null) {
@@ -25,7 +33,8 @@ public class Inventory {
 			
 		}
 	}
-	
+
+// Removes ingredient in the inventory
 	public void removeIngredient(int i, int qty) {
 			if(i >= 0 && i < items.length && items[i] != null) {
 				items[i].deductQuantity(qty);
@@ -35,7 +44,8 @@ public class Inventory {
 				}
 			}
 	}
-	
+
+// Displays the Inventory. Differs while selling items or by checking normally
 	public void viewInventory(boolean isSelling) {
 		int noneCheck = 0;
 		boolean selling = isSelling;
@@ -90,9 +100,8 @@ public class Inventory {
 		}
     }
 	
-	/*
-	 * For changing the index numbers when an entire item is sold 
-	 */
+	// For changing the index numbers when an entire item is sold 
+	// Sorts the items to the nearest empty slot
 	public void compactInventory() {
 
 	    int index = 0;
@@ -115,22 +124,23 @@ public class Inventory {
 	    }
 	}
 	
-	
+	// Gets the Ingredient quantity
 	public int getIngredientQty(String name) {
 		if(name == null) return 0;
 		
 		for (int i=0; i < items.length; i++) {
 			if(items[i] != null && items[i].getIngredient() != null) {
-			if (name.equalsIgnoreCase(items[i].getIngredient().getIngredientName())) {
-				return items[i].getQuantity();
-			}
+				if (name.equalsIgnoreCase(items[i].getIngredient().getIngredientName())) {
+					return items[i].getQuantity();
+				}
 			
-		}
+			}
 		}
 		
 		return 0;
 	}
-	
+
+	// adds Cauldron(s) to inventory
 	public void addCauldron() {
 		for (int i=0; i < cauldrons.length; i++) {
 			if (cauldrons[i] == null) {
@@ -140,7 +150,8 @@ public class Inventory {
 			}		
 		}
 	}
-	
+
+	// Gets the amount of USABLE cauldrons found in the inventory
 	public int getUsableCauldronsCount() {
 		int frequency = 0;
 		
@@ -152,7 +163,8 @@ public class Inventory {
 		
 		return frequency;
 	}
-	
+
+	// Gets the amount of UNUSABLE cauldrons found in the inventory
 	public int getUnusableCauldronsCount() {
 		int frequency = 0;
 		
@@ -168,7 +180,8 @@ public class Inventory {
 	public Cauldron[] getCauldronArray() {
 		return this.cauldrons;
 	}
-	
+
+	// checks whether an inventory slot is empty. Used primarily for compacting the inventory.
 	public boolean isEmpty() {
 		for(int i = 0; i < items.length; i++) {
 			if(items[i] != null && items[i].getQuantity() > 0) {
