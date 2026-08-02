@@ -62,10 +62,8 @@ public class gameStart {
 		//page 2 / dashboard
 		
 		setupBrewConcoctionButton();
-		setupCheckInventoryButton();
 		setupCheckSpellbookButton();
 		setupVisitMarketButton();
-		setupBlessCauldronButton();
 		setupLoginBonusButton();
 		setupExitGameButton();
 		
@@ -142,19 +140,6 @@ public class gameStart {
 		});
 	}
 
-// Hanldes the Check Inventory button, allows player to open their Inventory Interface
-
-	private void setupCheckInventoryButton() {
-		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				p.getInventory().viewInventory(false);
-			
-			}
-		});
-	}
-
 /**
 * Handles the Check Spellbook button and displays the discovered recipes, also
 *  connects the spellbook page's exit to return to the dashboard
@@ -219,29 +204,6 @@ public class gameStart {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				welcomeView.showDashboardPage();
-			}
-		});
-	}
-
-/**
-* Handles the Bless Cauldron button and opens the cauldron-repair interface
-* if the player has damaged cauldrons
-*/
-	
-	private void setupBlessCauldronButton() {
-		this.welcomeView.getBtnBlessCauldron().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(p.getInventory().getUnusableCauldronsCount() == 0) {
-					}
-					if (p.getInventory().getUnusableCauldronsCount() > 0) {
-						BlessCauldron bless = new BlessCauldron();
-						bless.visitMenu(p);
-					}
-					
-					else {
-						JOptionPane.showMessageDialog(welcomeView, "\nYou have no cauldrons to bless in your inventory.", "Clinic Alert", JOptionPane.INFORMATION_MESSAGE);
-					}
 			}
 		});
 	}
@@ -487,8 +449,12 @@ public class gameStart {
 
 	    // Bless Cauldron
 	    welcomeView.getBtnBlessCauldron().addActionListener(e -> {
-	        welcomeView.getBlessView().setPlayer(p);
-	        welcomeView.showBlessView();
+	        if (p.getInventory().getUnusableCauldronsCount() > 0) {
+	            welcomeView.getBlessView().setPlayer(p);
+	            welcomeView.showBlessView();
+	        } else {
+	            JOptionPane.showMessageDialog(welcomeView, "\nYou have no cauldrons to bless in your inventory.", "Clinic Alert", JOptionPane.INFORMATION_MESSAGE);
+	        }
 	    });
 
 	    // Back
@@ -579,6 +545,8 @@ public class gameStart {
 			this.p = new Player("");
 			boolean parsingInventory = false;
 			boolean parsingSpellbook = false;
+			int totalCauldronsFromFile = -1;
+			int usableCauldronsFromFile = -1;
 			
 			while((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -632,32 +600,33 @@ public class gameStart {
 						p.setCrystals(Integer.parseInt(value));
 						break;
 					case "USABLE CAULDRONS":
-						int usableCount = Integer.parseInt(value);
-						
-						for(int i = 0; i <p.getInventory().getCauldrons().length; i++) {
-							p.getInventory().getCauldrons()[i] = null;
-						}
-						
-						for(int i = 0; i < usableCount; i++) {
-							p.getInventory().getCauldrons()[i] = new Cauldron(true);
-						}
+						usableCauldronsFromFile = Integer.parseInt(value);
 						break;
 					case "TOTAL CAULDRONS":
-						int totalCount = Integer.parseInt(value);
-						int currentUsable = p.getInventory().getUsableCauldronsCount();
-						
-						int brokenNeeded = totalCount - currentUsable;
-						for(int i = currentUsable; i < (currentUsable + brokenNeeded); i++) {
-							if(i < p.getInventory().getCauldrons().length) {
-								p.getInventory().getCauldrons()[i] = new Cauldron(false);
-							}
-						}
-						
+						totalCauldronsFromFile = Integer.parseInt(value);
 						break;
 					}
 					
 				}
 				
+			}
+			
+			// Rebuild the cauldron array once, now that both counts from the
+			// save file are known, so usable/broken cauldrons restore correctly
+			// regardless of the order the two lines appeared in the file.
+			if (totalCauldronsFromFile >= 0 && usableCauldronsFromFile >= 0) {
+				Cauldron[] rebuiltCauldrons = new Cauldron[p.getInventory().getCauldrons().length];
+				int brokenNeeded = totalCauldronsFromFile - usableCauldronsFromFile;
+				
+				int slot = 0;
+				for(int i = 0; i < usableCauldronsFromFile && slot < rebuiltCauldrons.length; i++) {
+					rebuiltCauldrons[slot++] = new Cauldron(true);
+				}
+				for(int i = 0; i < brokenNeeded && slot < rebuiltCauldrons.length; i++) {
+					rebuiltCauldrons[slot++] = new Cauldron(false);
+				}
+				
+				p.getInventory().setCauldrons(rebuiltCauldrons);
 			}
 			
 			
