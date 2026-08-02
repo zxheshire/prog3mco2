@@ -1,3 +1,12 @@
+/**
+* Interface for Creative Mode in Brew Concoction
+* the player can attempt to brew a potion
+* using a base and 1-3 unique fruits
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.view;
 
 import javax.swing.*;
@@ -15,7 +24,13 @@ public class CreativeBrewInterface extends JPanel {
 	private JCheckBox chkStrawberry, chkOrange, chkLemon, chkBanana, chkMango, chkPineapple, chkKiwi, chkBlueberry, chkCoconut;
 	private JButton btnCreativeBrewConcoction;
 	private JButton btnExitCreativeBrew;
-	
+
+/**
+* Create the panel.
+* Builds the title, base selection combo box, fruit ingredient checkboxes,
+* and the brew/back buttons.
+*/
+
 	CreativeBrewInterface() {
 		
 		setLayout(null);
@@ -62,18 +77,26 @@ public class CreativeBrewInterface extends JPanel {
 		btnExitCreativeBrew = new JButton("Back to Main Menu");
 		btnExitCreativeBrew.setBounds(338, 347, 200, 35);
 	}
+
+// Returns the "Brew Concoction" button
 	
 	public JButton getBtnCreativeBrewConcoction() {
 		return this.btnCreativeBrewConcoction;
 	}
+
+// Returns the "Back to Main Menu" button
 	
 	public JButton getBtnExitCreativeBrew() {
 		return this.btnExitCreativeBrew;
 	}
+
+// Returns the base selection combo box
 	
 	public JComboBox<String> getComboBaseSelection() {
 		return this.comboBaseSelection;
 	}
+
+// Returns a list of the fruit names whose checkboxes are currently selected
 	
 	public ArrayList<String> getSelectedFruitsList() {
 		ArrayList<String> selectedFruits = new ArrayList<>();
@@ -88,6 +111,8 @@ public class CreativeBrewInterface extends JPanel {
 		if (chkCoconut.isSelected()) selectedFruits.add("COCONUT");
 		return selectedFruits;
 	}
+
+// Deselects all fruit ingredient checkboxes
 	
 	public void resetCheckboxes() {
 		chkStrawberry.setSelected(false);
