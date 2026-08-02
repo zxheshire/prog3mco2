@@ -1,3 +1,8 @@
+/* Manages the Market 
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.controller;
 
 import java.util.*;
@@ -15,12 +20,14 @@ public class Market {
 		this.potionsBrewedCount = 0;
 		populateSlots();
 	}
-	
+
+	// refreshes the market
 	public void refreshMarket() {
 		populateSlots();
 		this.marketJustRefreshed = true;
 	}
-	
+
+	// adds in random Ingredients and sometimes cauldrons to populate the Market Slots 
 	private void populateSlots() {
 		Random rnd = new Random();
 		boolean cauldronAppeared = false;
@@ -53,6 +60,11 @@ public class Market {
 		return flagWasSet;
 	}
 
+	/* 
+	* Contains the code of buying ingredients, as well as displays the Available items
+	* and replaces sold items with SOLD OUT
+	* Updates the player's Balance once an item is bought
+	*/ 
 	public void buyIngredients(Player p) {
 		Scanner scn = new Scanner(System.in);
 		boolean buying = true;
@@ -130,7 +142,11 @@ public class Market {
 		visitMarket(p);
 		
 	}
-			
+
+	/*
+	* Code for Selling Ingredients
+	* Updates the player's balance once an ingredient is sold
+	*/
 	public void sellIngredients(Player p) {
 		Scanner scn = new Scanner(System.in);
 		boolean selling = true;
@@ -165,7 +181,7 @@ public class Market {
 					InventoryItem item = p.getInventory().items[index];
 					
 					if (item == null) {
-						System.out.println("here is no item in that slot.");
+						System.out.println("There is no item in that slot.");
 						continue;
 					}
 					
