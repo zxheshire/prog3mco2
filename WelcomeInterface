@@ -9,6 +9,8 @@
 
 package MCO2.view;
 
+import MCO2.controller.*;
+
 import javax.swing.*;
 
 import java.awt.*;
