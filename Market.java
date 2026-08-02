@@ -250,7 +250,10 @@ public class Market {
 		}
 		this.concoctionsBrewedSinceLastVisit = 0;
 	}
-	
+
+/* 
+* Gets displayed when entering the market
+*/
 	public void visitMarket(Player p) {
 		Scanner scn = new Scanner(System.in);
 		
