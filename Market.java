@@ -8,14 +8,20 @@ public class Market {
 	private MarketItems[] slots;
 	private int potionsBrewedCount;
 	private int concoctionsBrewedSinceLastVisit;
+	private boolean marketJustRefreshed;
 	
 	public Market() {
 		this.slots = new MarketItems[8];
 		this.potionsBrewedCount = 0;
-		refreshMarket();
+		populateSlots();
 	}
 	
 	public void refreshMarket() {
+		populateSlots();
+		this.marketJustRefreshed = true;
+	}
+	
+	private void populateSlots() {
 		Random rnd = new Random();
 		boolean cauldronAppeared = false;
 
@@ -34,6 +40,17 @@ public class Market {
 	    	}
 
 	    }
+	}
+	
+	/**
+	 * Returns whether the market has refreshed since the last time this
+	 * was checked, then clears the flag. Call this once, right before you
+	 * show the market page, so the notice only fires once per refresh.
+	 */
+	public boolean consumeRefreshFlag() {
+		boolean flagWasSet = this.marketJustRefreshed;
+		this.marketJustRefreshed = false;
+		return flagWasSet;
 	}
 
 	public void buyIngredients(Player p) {
@@ -206,18 +223,22 @@ public class Market {
 		System.out.println("Come again sometime!");
 	}
 	
+	/**
+	 * If the player has successfully brewed 3+ concoctions since the market
+	 * was last checked, restocks the market. Either way, resets the count.
+	 * Call this every time the market is about to be shown to the player.
+	 */
+	public void checkAndRefreshIfNeeded() {
+		if (this.concoctionsBrewedSinceLastVisit >= 3) {
+			refreshMarket();
+		}
+		this.concoctionsBrewedSinceLastVisit = 0;
+	}
+	
 	public void visitMarket(Player p) {
 		Scanner scn = new Scanner(System.in);
 		
-		if(this.concoctionsBrewedSinceLastVisit >= 3) {
-			refreshMarket();
-			System.out.println("Notice: Market items have refreshed because you brewed"
-					+ this.concoctionsBrewedSinceLastVisit + " concoctions since your last visit!");
-		
-			this.concoctionsBrewedSinceLastVisit = 0;
-		}else {
-			this.concoctionsBrewedSinceLastVisit = 0;
-		}
+		checkAndRefreshIfNeeded();
 		
 		int marketChoice;
 		
