@@ -1,0 +1,58 @@
+/* Manages the blueprints for the recipes
+* @authr Marie Valle
+* @version 1.0
+* @since 2026 
+*/
+
+package MCO2.model;
+
+import java.util.*;
+
+public class Recipe {
+	private int concoctionID;
+	private ConcoctionBase base;
+	private String potionName;
+	private int sellingPrice;
+	private ArrayList<String> fruits;
+	
+// Creates a recipe with the given ID, base, required fruits, potion name, and selling price
+	
+	public Recipe(int concoctionID, ConcoctionBase base, ArrayList<String> fruits, String potionName, int sellingPrice) {
+		this.concoctionID = concoctionID;
+		this.base = base;
+		this.fruits =  new ArrayList<>(fruits);
+		this.potionName = potionName;
+		this.sellingPrice = sellingPrice;
+	} 
+	
+// Returns the recipe's unique concoction ID
+	
+	public int getConcoctionID() {
+		return this.concoctionID;
+	}
+	
+// Returns the base required by this recipe
+	
+	public ConcoctionBase getBase() {
+		return this.base;
+	}
+	
+// Returns a copy of the list of fruits required by this recipe
+	
+	public ArrayList<String> getFruits(){
+		return new ArrayList<>(this.fruits);
+	}
+	
+// Returns the display name of the potion this recipe produces
+	
+	public String getPotionName() {
+		return this.potionName;
+	}
+	
+// Returns the price this potion sells for when brewed
+	
+	public int getSellingPrice() {
+		return this.sellingPrice;
+	}
+
+}
