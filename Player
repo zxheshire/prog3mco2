@@ -1,11 +1,16 @@
+/**
+* Player class holds information regarding
+* the player itself: the name, crystals,
+* inventory, spellbook, and login bonus
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.model;
 
 import java.io.*;
 import java.util.*;
-
-/**
- * 
- */
 
 public class Player {
 	private String name;
@@ -14,10 +19,10 @@ public class Player {
 	private Spellbook spellbook;
 	private boolean claimedLogInBonus;
 	
-	/**
-	 * 
-	 * @param name
-	 */
+/**
+* Create a new player with the given name, starting crystals, and empty
+* inventory/spellbook
+*/
 	
 	public Player(String name) {
 		this.name = name;
@@ -26,52 +31,50 @@ public class Player {
 		this.spellbook = new Spellbook();
 		this.claimedLogInBonus = false;
 	}
+
+
+// Returns the player's name
+
 	
-	/**
-	 * 
-	 * @return
-	 */
 	public String getName() {
 		return this.name;
 	}
-	/**
-	 * 
-	 * @param name
-	 */
+
+// Sets the player's name, trimming whitespace, if it's non-null and non-blank
+
 	public void setName(String name) {
 		if(name != null && !name.trim().isEmpty()) {
 			this.name = name.trim();
 		}
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
+// Returns the player's current crystal balance
+
 	public int getCrystals() {
 		return this.crystals;
 	}
-	/**
-	 * 
-	 * @param crystals
-	 */
+
+// Sets the player's crystal balance directly
+
 	public void setCrystals(int crystals) {
 		this.crystals = crystals;
 	}
-	/**
-	 * 
-	 * @param amt
-	 */
+
+// Adds crystals to the player's balance if the amount is positive
+
 	public void addCrystals(int amt) {
 		if(amt>0) {
 			this.crystals += amt;
 		}
 	}
-	/**
-	 * Deducts crystals if the player can afford it.
-	 * @param amt
-	 * @return true if the deduction succeeded, false if amt was invalid
-	 *         or the player didn't have enough crystals
-	 */
+
+/**
+* Deducts crystals if the player can afford it.
+* @param amt
+* @return true if the deduction succeeded, false if amt was invalid
+* or the player didn't have enough crystals
+*/
+
 	public boolean deductCrystals(int amt) {
 		if(amt > 0 && this.crystals >= amt) {
 			this.crystals -= amt;
@@ -79,9 +82,12 @@ public class Player {
 		}
 		return false;
 	}
-	/**
-	 * 
-	 */
+
+/**
+* Marks the first usable cauldron in the player's inventory as unusable
+* (broken). Does nothing if no usable cauldron is found.
+*/
+
 	public void breakCauldron() {
 		Cauldron[] cauldronArray = this.getInventory().getCauldrons();
 		boolean cauldronBroken = false;
@@ -101,31 +107,26 @@ public class Player {
 		}
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+// Returns the player's spellbook
+
 	public Spellbook getSpellbook() {
 		return this.spellbook;
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
+// Returns the player's inventory
+
 	public Inventory getInventory(){
 		return this.inventory;
 	} 
-	/**
-	 * 
-	 * @return
-	 */
+
+// Returns whether the player has already claimed the login bonus
+
 	public boolean hasClaimedBonus() {
 		return this.claimedLogInBonus;
 	}
-	/**
-	 * 
-	 * @param claimed
-	 */
+
+//  Sets whether the player has claimed the login bonus
+
 	public void setClaimedBonus(boolean claimed) {
 		this.claimedLogInBonus = claimed;
 	}
