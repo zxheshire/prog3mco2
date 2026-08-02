@@ -1,0 +1,133 @@
+package MCO2.model;
+
+import java.io.*;
+import java.util.*;
+
+/**
+ * 
+ */
+
+public class Player {
+	private String name;
+	private int crystals;
+	private Inventory inventory;
+	private Spellbook spellbook;
+	private boolean claimedLogInBonus;
+	
+	/**
+	 * 
+	 * @param name
+	 */
+	
+	public Player(String name) {
+		this.name = name;
+		this.crystals = 5000;
+		this.inventory = new Inventory();
+		this.spellbook = new Spellbook();
+		this.claimedLogInBonus = false;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
+	}
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		if(name != null && !name.trim().isEmpty()) {
+			this.name = name.trim();
+		}
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public int getCrystals() {
+		return this.crystals;
+	}
+	/**
+	 * 
+	 * @param crystals
+	 */
+	public void setCrystals(int crystals) {
+		this.crystals = crystals;
+	}
+	/**
+	 * 
+	 * @param amt
+	 */
+	public void addCrystals(int amt) {
+		if(amt>0) {
+			this.crystals += amt;
+		}
+	}
+	/**
+	 * Deducts crystals if the player can afford it.
+	 * @param amt
+	 * @return true if the deduction succeeded, false if amt was invalid
+	 *         or the player didn't have enough crystals
+	 */
+	public boolean deductCrystals(int amt) {
+		if(amt > 0 && this.crystals >= amt) {
+			this.crystals -= amt;
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 
+	 */
+	public void breakCauldron() {
+		Cauldron[] cauldronArray = this.getInventory().getCauldrons();
+		boolean cauldronBroken = false;
+		
+		for(int i = 0; i < cauldronArray.length; i++) {
+			if(cauldronArray[i] != null && cauldronArray[i].isUsable()) {
+				cauldronArray[i].setUsable(false);
+				cauldronBroken = true;
+				
+				System.out.println("A cauldron has been ruined and is full of slop!");
+				break;
+			}
+		}
+		
+		if(!cauldronBroken) {
+			System.out.println("You have no more usable cauldrons");
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Spellbook getSpellbook() {
+		return this.spellbook;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Inventory getInventory(){
+		return this.inventory;
+	} 
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean hasClaimedBonus() {
+		return this.claimedLogInBonus;
+	}
+	/**
+	 * 
+	 * @param claimed
+	 */
+	public void setClaimedBonus(boolean claimed) {
+		this.claimedLogInBonus = claimed;
+	}
+	
+}
