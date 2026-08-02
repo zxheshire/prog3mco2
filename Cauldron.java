@@ -1,3 +1,10 @@
+/* Manages the cauldron object
+* Sets the attributes of the cauldron upon object creation
+* @aurthor Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
+
 package MCO2.model;
 
 public class Cauldron {
