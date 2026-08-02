@@ -1,0 +1,145 @@
+/* Manages the master list of all known potion
+* recipes: loading them from a CSV file 
+* and validating whether a chosen base/fruit
+* combination matches a known recipe.
+* @author Marie Valle
+* @version 1.0
+* @since 2026
+*/
+
+package MCO2.model;
+
+import java.io.BufferedReader; 
+import java.io.FileReader; 
+import java.io.IOException; 
+import java.util.*;
+
+public class RecipeDatabase {
+	
+	private ArrayList<Recipe> allRecipes;
+	
+// Creates an empty recipe database
+	
+	public RecipeDatabase() {
+		
+		this.allRecipes = new ArrayList<>();
+		
+	}
+	
+// Loads recipes from the given CSV file path, parsing each line into a
+// Recipe (ID, potion name, base, selling price, and any listed fruits)
+// and adding it to allRecipes. Skips blank or malformed lines.
+	
+	public void loadPCcsv(String csvPath) {
+		
+		java.io.File fileCheck = new java.io.File(csvPath);
+		
+		if(!fileCheck.exists()) {
+			System.out.println("File cannot be found at: " + fileCheck.getAbsolutePath());
+			return;
+		}
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(csvPath))){
+			String line;
+			int loadedCount = 0;
+			
+			while ((line = br.readLine()) != null) {
+				
+				if(line.trim().isEmpty()) continue;
+				
+				
+				String[] columns = line.split(",",-1);
+				
+				if(columns.length < 4) continue;
+				
+				int id = Integer.parseInt(columns[0].trim());
+				String potionName = columns[1].trim();
+				String baseString = columns[2].trim();
+				int sellPrice = Integer.parseInt(columns[3].trim());
+				
+				ConcoctionBase recipeBase = new ConcoctionBase(baseString);
+				ArrayList<String> recipeFruits = new ArrayList<>();
+				
+				for(int i = 4; i < columns.length; i++) {
+					
+						String ingredientName = columns[i].trim();
+						
+						if(!ingredientName.isEmpty()) {
+							recipeFruits.add(ingredientName);
+						}
+					
+				}
+				
+				Recipe masterRecipe = new Recipe(id,recipeBase, recipeFruits, potionName,sellPrice);
+				allRecipes.add(masterRecipe);
+				loadedCount++;
+			
+			}
+			
+			System.out.println("Success! Succesfully loaded " + loadedCount + " recipes from Potion Compendium CSV.");
+		
+			
+			} catch (IOException | NumberFormatException e) {
+			
+			System.out.println("Error: Could not read or process the CSV file");
+			e.printStackTrace();
+		} 
+		
+	}
+	
+// Checks the chosen base and fruits against every recipe in the database
+// and returns the matching Recipe if the base and the full set of fruits
+// (regardless of order) match exactly; returns null if there's no match
+	
+	public Recipe validateMix(ConcoctionBase chosenBase, ArrayList<String> chosenFruits) {
+		
+		for (Recipe possibleRecipe : allRecipes) {
+			
+			if(possibleRecipe.getBase() == null || chosenBase == null ) continue;
+			if(!possibleRecipe.getBase().getName().equalsIgnoreCase(chosenBase.getName())) {
+				
+				continue;
+				
+			}
+			
+			ArrayList<String> recipeFruits = possibleRecipe.getFruits();
+			if (recipeFruits.size() != chosenFruits.size()) {
+				continue;
+			}
+			
+			boolean allFruitsMatch = true;
+			for(String rf : recipeFruits) {
+				boolean currentFruitFound = false;
+				for(String cf : chosenFruits) {
+					if (rf. equalsIgnoreCase(cf)) {
+						currentFruitFound = true;
+						break;
+					}
+				}
+				
+				if(!currentFruitFound) {
+					allFruitsMatch = false;
+					break;
+				}
+				
+			}
+			
+			if(allFruitsMatch) {
+				return possibleRecipe;
+			}
+			
+		}
+		
+		return null;
+		
+		
+	}
+	
+// Returns the full list of loaded recipes
+	
+	public ArrayList<Recipe> getAllRecipes(){
+		return this.allRecipes;
+	}
+	
+
+}
