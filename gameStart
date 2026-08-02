@@ -50,6 +50,8 @@ public class gameStart {
 		
 		this.welcomeView = new WelcomeInterface();
 		
+		//page 1
+		
 		this.welcomeView.getBtnNewGame().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -64,17 +66,49 @@ public class gameStart {
 			}
 		});
 		
+		//page 2
+		
 		this.welcomeView.getBtnBrewConcoction().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//brew concoction
+				
+				if(p.getInventory().getUsableCauldronsCount() < 2) {
+					JOptionPane.showMessageDialog(welcomeView, "You have no usable cauldrons to brew potions. Please bless a cauldron first.", "Brew Restriction", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				String[] options = {"Recipe Mode","Creative Mode", "Cancel"};
+				int modeSelection = JOptionPane.showOptionDialog(welcomeView, "Select a brewing mode:", "Brew Mode Selection", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options);
+				
+				if(modeSelection == 0) {
+				
+					RecipeBrewInterface rbCard = welcomeView.getRecipeBrewCard();
+					rbCard.getRecipeListModel().clear();
+					
+					ArrayList<Recipe> unlockedRecipes = p.getSpellbook().getRecipeSorted();
+					
+					if(unlockedRecipes.isEmpty()) {
+						JOptionPane.showMessageDialog(welcomeView,"No recipes discovered. Try brewing some potions in creative mode first!","Recipe Registry", JOptionPane.WARNING_MESSAGE);
+					}else {
+						for(Recipe r : unlockedRecipes) {
+							rbCard.getRecipeListModel().addElement(String.format("[ID: # %d] %s (Base: %s | Fruits: %s)", r.getConcoctionID(), r.getPotionName(), r.getBase().getName(), r.getFruits().toString()));
+						}
+					}
+					
+					welcomeView.showRecipeBrewPage();
+				} else if(modeSelection == 1) {
+					welcomeView.getCreativeBrewCard().resetCheckboxes();
+					welcomeView.showCreativeBrewPage();
+				}
 			}
 		});
 		
 		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				p.getInventory().viewInventory(false);
+			
 			}
 		});
 		
@@ -122,7 +156,10 @@ public class gameStart {
 		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				primaryMarket.visitMarket(p);
+				refreshDashboardView();
+				
 			}
 		});
 		
@@ -130,7 +167,6 @@ public class gameStart {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(p.getInventory().getUnusableCauldronsCount() == 0) {
-					BlessCauldron bless = new BlessCauldron();
 					}
 					if (p.getInventory().getUnusableCauldronsCount() > 0) {
 						BlessCauldron bless = new BlessCauldron();
@@ -170,6 +206,97 @@ public class gameStart {
 				if(exitChoice == JOptionPane.YES_OPTION) {
 				exitGame();
 				}
+			}
+		});
+		
+		//sub interfaces,,,
+		
+		this.welcomeView.getRecipeBrewCard().getBtnBrewSelectedRecipe().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				if(p.getInventory().getUsableCauldronsCount() < 2) {
+					JOptionPane.showMessageDialog(welcomeView, "You have no usable cauldrons to brew potions. Please bless a cauldron first.", "Brew Restriction", JOptionPane.WARNING_MESSAGE);
+					return;
+			}
+			
+			int selectionIndex = welcomeView.getRecipeBrewCard().getRecipeList().getSelectedIndex();
+			ArrayList<Recipe> unlockedRecipes = p.getSpellbook().getRecipeSorted();
+			
+			if(selectionIndex < 0 || selectionIndex >= unlockedRecipes.size()) {
+				JOptionPane.showMessageDialog(welcomeView, "Please select a recipe to brew.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			Recipe selectedRecipe = unlockedRecipes.get(selectionIndex);
+			
+			MCO2.model.Concoction logicEngine = new MCO2.model.Concoction();
+			boolean brewSuccess = logicEngine.recipeMode(p, selectedRecipe);
+			
+			if(brewSuccess) {
+				primaryMarket.incrementBrewCount();
+				refreshDashboardView();
+				
+				JOptionPane.showMessageDialog(welcomeView, "Successfully brewed [" + selectedRecipe.getPotionName() + "]", "Brew Success", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(welcomeView, "Failed to brew [" + selectedRecipe.getPotionName() + "]. Check your inventory for required ingredients.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			JOptionPane.showMessageDialog(welcomeView, "You have " + p.getInventory().getUsableCauldronsCount() + " usable cauldrons remaining.", "Cauldron Status", JOptionPane.INFORMATION_MESSAGE);
+			welcomeView.showDashboardPage();
+			
+			}
+			
+		});
+		
+		this.welcomeView.getRecipeBrewCard().getBtnExitRecipeBrew().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				welcomeView.showDashboardPage();
+			}
+		});
+	
+		this.welcomeView.getCreativeBrewCard().getBtnCreativeBrewConcoction().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				MCO2.view.CreativeBrewInterface creativeCard = welcomeView.getCreativeBrewCard();
+				String chosenBase = creativeCard.getComboBaseSelection().getSelectedItem().toString();
+				ArrayList<String> selectedFruits = creativeCard.getSelectedFruitsList();
+				
+				if(p.getInventory().getUsableCauldronsCount() < 2) {
+					JOptionPane.showMessageDialog(welcomeView, "You have no usable cauldrons to brew potions. Please bless a cauldron first.", "Brew Restriction", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				if(selectedFruits.isEmpty()) {
+					JOptionPane.showMessageDialog(welcomeView, "Please select 1-3 unique fruit check boxes to brew.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				MCO2.model.Concoction logicEngine = new MCO2.model.Concoction();
+				Recipe discoveredRecipe = logicEngine.creativeMode(p, recipeDB, chosenBase, selectedFruits);
+				
+				if(discoveredRecipe != null) {
+					primaryMarket.incrementBrewCount();
+					refreshDashboardView();
+					
+					JOptionPane.showMessageDialog(welcomeView, "Successfully brewed [" + discoveredRecipe.getPotionName() + "] | Recipe ID: #" + discoveredRecipe.getConcoctionID(), "Brew Success", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						
+						if(p.getInventory().getIngredientQty(chosenBase) < 1) {
+							JOptionPane.showMessageDialog(welcomeView, "Failed to brew. You do not have enough [" + chosenBase + "] in your inventory.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
+							
+						}else {
+							
+								primaryMarket.incrementBrewCount();
+								refreshDashboardView();
+								JOptionPane.showMessageDialog(welcomeView, "oh no! The potion fizzled up and turned into slop,,,,,\nYour cauldron was ruined and is filled with waste", "Cauldron Waste", JOptionPane.ERROR_MESSAGE);
+							
+						}
+					}
+				
+				welcomeView.showDashboardPage();
 			}
 		});
 		
