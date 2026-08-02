@@ -1,3 +1,8 @@
+/* Manages the Market Interface
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.view;
 
 import javax.swing.JPanel;
