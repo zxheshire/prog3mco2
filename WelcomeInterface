@@ -1,3 +1,12 @@
+/**
+* Main game window that uses CardLayout to switch between all UI
+* screens (welcome, dashboard, spellbook, brewing, market, 
+* inventory, and bless cauldron views)
+* authors: Ysha Nacpil and Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.view;
 
 import javax.swing.*;
@@ -10,11 +19,15 @@ public class WelcomeInterface extends JFrame {
 	
 	private CardLayout cardLayout;
 	private JPanel mainContainerPanel;
-	
+
+// starting page
+
 	private JPanel welcomePagePanel;
 	private JButton btnNewGame;
 	private JButton btnLoadGame;
-	
+
+// dashboard / main menu
+
 	private JPanel dashboardPagePanel;
 	private JLabel lblPlayerStatus;
 	private JButton btnBrewConcoction;
@@ -25,27 +38,35 @@ public class WelcomeInterface extends JFrame {
 	private JButton btnLoginBonus;
 	private JButton btnExitGame;
 	
-	//spellbook
+//spellbook
+
 	private SpellbookInterface spellbookCard;
 	
-	//brew
+//brew
+
 	private RecipeBrewInterface recipeBrewCard;
 	private CreativeBrewInterface creativeBrewCard;
 
-	//For market Interface
+//For market Interface
+
 	private MarketInterface marketView;
 	private BuyView buyView;
 	private SellView sellView;
 	
-	//For inventory Interface
+//For inventory Interface
+
 	private InventoryInterface inventoryView;
 	
-	//for bless cauldron interface
-	private BlessCauldronView blessView;
+//for bless cauldron interface
 
-	/**
-	 * Create the frame.
-	 */
+	private BlessCauldronView blessView;
+	
+/**
+* Create the frame.
+* Sets up the window and builds the welcome and dashboard panels
+* then registers all cards with the CardLayout container
+*/
+
 	public WelcomeInterface() {
 		setTitle("Potion Prodigy");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,6 +158,8 @@ public class WelcomeInterface extends JFrame {
         
         cardLayout.show(mainContainerPanel, "WELCOME_PAGE");
     }
+
+// Switches the CardLayout to show the welcome page 
 	
 	public void showWelcomePage() {
 		if(this.cardLayout != null && this.mainContainerPanel != null) {
@@ -144,6 +167,8 @@ public class WelcomeInterface extends JFrame {
 			cardLayout.show(this.mainContainerPanel, "WELCOME_PAGE");
 		}
 	}
+
+// Switches the CardLayout to show the dashboard / main menu page and refreshes it
 	
 	public void showDashboardPage() {
 		if(this.cardLayout != null && this.mainContainerPanel != null) {
@@ -153,6 +178,8 @@ public class WelcomeInterface extends JFrame {
 			this.mainContainerPanel.repaint();
 		}
 	}
+
+// Switches the CardLayout to show the spellbook page and refreshes it
 	
 	public void showSpellbookPage() {
 		if(this.cardLayout != null && this.mainContainerPanel != null) {
@@ -162,6 +189,8 @@ public class WelcomeInterface extends JFrame {
 			this.mainContainerPanel.repaint();
 		}
 	}
+
+// Switches the CardLayout to show the recipe brew page and refreshes it
 	
 	public void showRecipeBrewPage() {
 		if(this.cardLayout != null && this.mainContainerPanel != null) {
@@ -171,6 +200,8 @@ public class WelcomeInterface extends JFrame {
 			this.mainContainerPanel.repaint();
 		}
 	}
+
+// Switches the CardLayout to show the creative brew page and refreshes it
 	
 	public void showCreativeBrewPage() {
 		if(this.cardLayout != null && this.mainContainerPanel != null) {
@@ -180,124 +211,177 @@ public class WelcomeInterface extends JFrame {
 			this.mainContainerPanel.repaint();
 		}
 	}
+
+// Returns the spellbook card/panel instance
 	
 	public SpellbookInterface getSpellbookCard() {
 		return this.spellbookCard;
 	}
+
+// Returns the recipe brew card/panel instance
 	
 	public RecipeBrewInterface getRecipeBrewCard() {
 		return this.recipeBrewCard;
 	}
+
+// Returns the creative brew card/panel instance
 	
 	public CreativeBrewInterface getCreativeBrewCard() {
 		return this.creativeBrewCard;
 	}
 
-	//For Market Interface
+// For Market Interface
+// Switches the CardLayout to show the market page
+
 	public void showMarketView() {
 	    cardLayout.show(mainContainerPanel, "MARKET_PAGE");
 	}
+
+// Returns the market view instance
 	
 	public MarketInterface getMarketView() {
 	    return marketView;
 	}
 	
-	//For Market Buy Ingredients Interface
+// For Market Buy Ingredients Interface
+// Creates the buy view for the given market and registers it with the CardLayout
+
 	public void createBuyView(Market market) {
 	    buyView = new BuyView(market);
 	    mainContainerPanel.add(buyView, "BUY_PAGE");
 	}
+
+// Reloads market data and switches the CardLayout to show the buy page
 	
 	public void showBuyView() {
 	    buyView.loadMarket();
 	    cardLayout.show(mainContainerPanel, "BUY_PAGE");
 	}
 
+// Returns the buy view instance
+
 	public BuyView getBuyView() {
 	    return buyView;
 	}
 	
-	//For Market Sell Ingredients Interface
+// For Market Sell Ingredients Interface
+// Creates the sell view for the given market and registers it with the CardLayout
+
 	public void createSellView(Market market) {
 	    sellView = new SellView(market);
 	    mainContainerPanel.add(sellView, "SELL_PAGE");
 	}
+
+// Reloads inventory data and switches the CardLayout to show the sell page
 	
 	public void showSellView() {
 	    sellView.loadInventory();
 	    cardLayout.show(mainContainerPanel, "SELL_PAGE");
 	}
 
+// Returns the sell view instance
+
 	public SellView getSellView() {
 	    return sellView;
 	}
 	
-	//For Inventory Interface
+// For Inventory Interface
+// Creates the inventory view and registers it with the CardLayout
+
 	public void createInventoryView() {
 	    inventoryView = new InventoryInterface();
 	    mainContainerPanel.add(inventoryView, "INVENTORY_PAGE");
 	}
+
+// Reloads inventory data and switches the CardLayout to show the inventory page
 
 	public void showInventoryView() {
 	    inventoryView.loadInventory();
 	    cardLayout.show(mainContainerPanel, "INVENTORY_PAGE");
 	}
 
+// Returns the inventory view instance
+
 	public InventoryInterface getInventoryView() {
 	    return inventoryView;
 	}
 	
-	//For Bless Cauldron Interface
+// For Bless Cauldron Interface
+// Creates the bless cauldron view and registers it with the CardLayout
+
 		public void createBlessView() {
 			blessView = new BlessCauldronView();
 		    mainContainerPanel.add(blessView, "BLESS_CAULDRON_PAGE");
 		}
+
+// Reloads inventory data and switches the CardLayout to show the bless cauldron page
 
 		public void showBlessView() {
 		    blessView.loadInventory();
 		    cardLayout.show(mainContainerPanel, "BLESS_CAULDRON_PAGE");
 		}
 
+// Returns the bless cauldron view instance
+
 		public BlessCauldronView getBlessView() {
 		    return blessView;
 		}
 
+// Returns the "New Game" button
+
 	public JButton getBtnNewGame() {
 		return this.btnNewGame;
 	}
+
+// Returns the "Load Game" button
 	
 	public JButton getBtnLoadGame() {
 		return this.btnLoadGame;
 	}
+
+// Returns the "Brew Concoction" button
 	
 	public JButton getBtnBrewConcoction() {
 		return this.btnBrewConcoction;
 	}
+
+// Returns the "Check Inventory" button
 	
 	public JButton getBtnCheckInventory() {
 		return this.btnCheckInventory;
 	}
+
+// Returns the "Check Spellbook" button
 	
 	public JButton getBtnCheckSpellbook() {
 		return this.btnCheckSpellbook;
 	}
+
+// Returns the "Visit Market" button
 	
 	public JButton getBtnVisitMarket() {
 		return this.btnVisitMarket;
 	}
+
+// Returns the "Bless Cauldron" button
 	
 	public JButton getBtnBlessCauldron() {
 		return this.btnBlessCauldron;
 	}
+
+// Returns the "Login Bonus" button
 	
 	public JButton getBtnLoginBonus() {
 		return this.btnLoginBonus;
 	}
+
+// Returns the "Exit Game" button
 	
 	public JButton getBtnExitGame() {
 		return this.btnExitGame;
 	}
-	
+
+// Updates the dashboard's player status label text
 	
 	public void updateStatusDisplay(String text) {
 		this.lblPlayerStatus.setText(text);
