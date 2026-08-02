@@ -8,13 +8,7 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
 
-/** Manages the core game loop, file saving/loading, and state changes 
- * for the "Potion Prodigy" game.
- *
- * @author Marie Valle
- * @version 1.0
- * @since 2026 
- */
+
 public class gameStart {
 	
 	private Player p;
@@ -48,26 +42,53 @@ public class gameStart {
 	
 	public void bootUp() {
 		
+
 		this.welcomeView = new WelcomeInterface();
 		
 		//page 1
 		
+		setupNewGameButton();
+		setupLoadGameButton();
+		
+		//page 2 / dashboard
+		
+		setupBrewConcoctionButton();
+		setupCheckInventoryButton();
+		setupCheckSpellbookButton();
+		setupVisitMarketButton();
+		setupBlessCauldronButton();
+		setupLoginBonusButton();
+		setupExitGameButton();
+		
+		//sub interfaces,,,
+		
+		setupRecipeBrewView();
+		setupCreativeBrewView();
+		
+		this.welcomeView.setVisible(true);
+		
+	}
+	
+
+	private void setupNewGameButton() {
 		this.welcomeView.getBtnNewGame().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				handleGuiNewGame();
 			}
 		});
-		
+	}
+	
+	private void setupLoadGameButton() {
 		this.welcomeView.getBtnLoadGame().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				handleGuiLoadGame();
 			}
 		});
-		
-		//page 2
-		
+	}
+	
+	private void setupBrewConcoctionButton() {
 		this.welcomeView.getBtnBrewConcoction().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -102,7 +123,20 @@ public class gameStart {
 				}
 			}
 		});
-		
+	}
+	
+	private void setupCheckInventoryButton() {
+		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				p.getInventory().viewInventory(false);
+			
+			}
+		});
+	}
+	
+	private void setupCheckSpellbookButton() {
 		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -139,40 +173,46 @@ public class gameStart {
 				welcomeView.showDashboardPage();
 			}
 		});
-		
+	}
 	
-	// Visit Market View
+	private void setupVisitMarketButton() {
 		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				welcomeView.showMarketView();
+				
+				showMarketPage();
+				refreshDashboardView();
+				
 			}
 		});
-
-		//For exiting Market
-		this.welcomeView.getMarketView().getBtnExitMarket().addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		    		refreshDashboardView();
-		        welcomeView.showDashboardPage();
-		    }
-		});
 		
-		// For bless cauldron no broken cauldron
+		this.welcomeView.getMarketView().getBtnExitMarket().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				welcomeView.showDashboardPage();
+			}
+		});
+	}
+	
+	private void setupBlessCauldronButton() {
 		this.welcomeView.getBtnBlessCauldron().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(p.getInventory().getUnusableCauldronsCount() == 0) {
+					}
+					if (p.getInventory().getUnusableCauldronsCount() > 0) {
+						BlessCauldron bless = new BlessCauldron();
+						bless.visitMenu(p);
+					}
+					
+					else {
 						JOptionPane.showMessageDialog(welcomeView, "\nYou have no cauldrons to bless in your inventory.", "Clinic Alert", JOptionPane.INFORMATION_MESSAGE);
-						welcomeView.showDashboardPage(); // go back/main menu
-				        return; // IMPORTANT: stops the rest of the code
-				    }
-
-				    welcomeView.getBlessView().setPlayer(p);
-				    welcomeView.showBlessView();
+					}
 			}
 		});
-
+	}
+	
+	private void setupLoginBonusButton() {
 		this.welcomeView.getBtnLoginBonus().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -191,7 +231,9 @@ public class gameStart {
 				}
 			}
 		});
-		
+	}
+	
+	private void setupExitGameButton() {
 		this.welcomeView.getBtnExitGame().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -202,54 +244,9 @@ public class gameStart {
 				}
 			}
 		});
-		
-		//sub interfaces,,,
-		
-		this.welcomeView.getRecipeBrewCard().getBtnBrewSelectedRecipe().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			
-				if(p.getInventory().getUsableCauldronsCount() < 2) {
-					JOptionPane.showMessageDialog(welcomeView, "You have no usable cauldrons to brew potions. Please bless a cauldron first.", "Brew Restriction", JOptionPane.WARNING_MESSAGE);
-					return;
-			}
-			
-			int selectionIndex = welcomeView.getRecipeBrewCard().getRecipeList().getSelectedIndex();
-			ArrayList<Recipe> unlockedRecipes = p.getSpellbook().getRecipeSorted();
-			
-			if(selectionIndex < 0 || selectionIndex >= unlockedRecipes.size()) {
-				JOptionPane.showMessageDialog(welcomeView, "Please select a recipe to brew.", "Selection Error", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			
-			Recipe selectedRecipe = unlockedRecipes.get(selectionIndex);
-			
-			MCO2.model.Concoction logicEngine = new MCO2.model.Concoction();
-			boolean brewSuccess = logicEngine.recipeMode(p, selectedRecipe);
-			
-			if(brewSuccess) {
-				primaryMarket.incrementBrewCount();
-				refreshDashboardView();
-				
-				JOptionPane.showMessageDialog(welcomeView, "Successfully brewed [" + selectedRecipe.getPotionName() + "]", "Brew Success", JOptionPane.INFORMATION_MESSAGE);
-				}else {
-					JOptionPane.showMessageDialog(welcomeView, "Failed to brew [" + selectedRecipe.getPotionName() + "]. Check your inventory for required ingredients.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
-				}
-				
-			JOptionPane.showMessageDialog(welcomeView, "You have " + p.getInventory().getUsableCauldronsCount() + " usable cauldrons remaining.", "Cauldron Status", JOptionPane.INFORMATION_MESSAGE);
-			welcomeView.showDashboardPage();
-			
-			}
-			
-		});
-		
-		this.welcomeView.getRecipeBrewCard().getBtnExitRecipeBrew().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				welcomeView.showDashboardPage();
-			}
-		});
+	}
 	
+	private void setupCreativeBrewView() {
 		this.welcomeView.getCreativeBrewCard().getBtnCreativeBrewConcoction().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -269,7 +266,7 @@ public class gameStart {
 				}
 				
 				MCO2.model.Concoction logicEngine = new MCO2.model.Concoction();
-				Recipe discoveredRecipe = logicEngine.creativeMode(p, recipeDB, chosenBase, selectedFruits);
+				Recipe discoveredRecipe = logicEngine.creativeMode(p, recipeDB, chosenBase, primaryMarket, selectedFruits);
 				
 				if(discoveredRecipe != null) {
 					primaryMarket.incrementBrewCount();
@@ -290,15 +287,68 @@ public class gameStart {
 						}
 					}
 				
+				JOptionPane.showMessageDialog(welcomeView, "You have " + p.getInventory().getUsableCauldronsCount() + " usable cauldrons remaining.", "Cauldron Status", JOptionPane.INFORMATION_MESSAGE);
 				welcomeView.showDashboardPage();
 			}
 		});
-		
-		this.welcomeView.setVisible(true);
-		
+	}
+	
+	private void setupRecipeBrewView() {
+
+	    welcomeView.getRecipeBrewCard().getBtnBrewSelectedRecipe().addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+
+	            if (p.getInventory().getUsableCauldronsCount() < 2) {
+	                JOptionPane.showMessageDialog(welcomeView, "You have no usable cauldrons to brew potions. Please bless a cauldron first.", "Brew Restriction", JOptionPane.WARNING_MESSAGE);
+	                return;
+	            }
+
+	            int selectionIndex = welcomeView.getRecipeBrewCard().getRecipeList().getSelectedIndex();
+	            ArrayList<Recipe> unlockedRecipes = p.getSpellbook().getRecipeSorted();
+
+	            if (selectionIndex < 0 || selectionIndex >= unlockedRecipes.size()) {
+	                JOptionPane.showMessageDialog(welcomeView, "Please select a recipe to brew.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+	                return;
+	            }
+
+	            Recipe selectedRecipe = unlockedRecipes.get(selectionIndex);
+
+	            MCO2.model.Concoction logicEngine = new MCO2.model.Concoction();
+	            boolean brewSuccess = logicEngine.recipeMode(p, primaryMarket, selectedRecipe);
+
+	            if (brewSuccess) {
+	                primaryMarket.incrementBrewCount();
+	                refreshDashboardView();
+	                JOptionPane.showMessageDialog(welcomeView, "Successfully brewed [" + selectedRecipe.getPotionName() + "]", "Brew Success", JOptionPane.INFORMATION_MESSAGE);
+	            } else {
+	                JOptionPane.showMessageDialog(welcomeView, "Failed to brew [" + selectedRecipe.getPotionName() + "]. Check your inventory for required ingredients.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
+	            }
+
+	            JOptionPane.showMessageDialog(welcomeView, "You have " + p.getInventory().getUsableCauldronsCount() + " usable cauldrons remaining.", "Cauldron Status", JOptionPane.INFORMATION_MESSAGE);
+	            welcomeView.showDashboardPage();
+	        }
+	    });
 	}
 
 //For Market Buy Ingredients Interface
+	/**
+	 * Shows the market page, and pops a notice if the market restocked
+	 * since the last time this was checked.
+	 */
+	private void showMarketPage() {
+	    primaryMarket.checkAndRefreshIfNeeded();
+	    
+	    welcomeView.showMarketView();
+	    
+	    if (primaryMarket.consumeRefreshFlag()) {
+	        JOptionPane.showMessageDialog(welcomeView,
+	            "The marketplace has been restocked with new items!",
+	            "Market Refreshed",
+	            JOptionPane.INFORMATION_MESSAGE);
+	    }
+	}
+	
 	private void setupBuyView() {
 
 	    welcomeView.createBuyView(primaryMarket);
@@ -320,7 +370,7 @@ public class gameStart {
 	    welcomeView.getBuyView().getBtnBack().addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            welcomeView.showMarketView();
+	            showMarketPage();
 	        }
 	    });
 	}
@@ -341,7 +391,7 @@ public class gameStart {
 
 	    // Back 
 	    welcomeView.getSellView().getBtnBack().addActionListener(e -> {
-	        welcomeView.showMarketView();
+	        showMarketPage();
 	    });
 	}
 	
@@ -417,8 +467,6 @@ public class gameStart {
 		
 		this.p = new Player(name);
 		this.p.setCrystals(5000);
-		this.p.getUsableCauldrons();
-		this.p.getUnusableCauldrons();
 		
 		JOptionPane.showMessageDialog(welcomeView,"Welcome, " + p.getName() + " | Crystals: " + p.getCrystals(), "Success", JOptionPane.INFORMATION_MESSAGE);
 		
