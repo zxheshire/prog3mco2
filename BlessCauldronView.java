@@ -88,7 +88,7 @@ public class BlessCauldronView extends JPanel {
 
         add(bottom, BorderLayout.SOUTH);
         
-        btnBless.addActionListener(e -> BlessSelected());
+        btnBless.addActionListener(e -> blessSelected());
 
     }
 
@@ -117,7 +117,7 @@ public class BlessCauldronView extends JPanel {
 * If the cauldron to be blessed is valid or not
 * Blesses the cauldron if valid
 */
-    private void BlessSelected() {
+    private void blessSelected() {
 
         try {
 
