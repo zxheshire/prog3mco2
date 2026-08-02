@@ -84,7 +84,7 @@ public class SellView extends JPanel {
 
        
 
-        btnSell.addActionListener(e -> SellSelected());
+        btnSell.addActionListener(e -> sellSelected());
     }
 
 /*
@@ -122,7 +122,7 @@ public class SellView extends JPanel {
 * Checks if entered quantity is valid or not
 * Updates the player's balance once sold
 */
-    private void SellSelected() {
+    private void sellSelected() {
 
         boolean SoldSomething = false;
 
