@@ -121,7 +121,26 @@ public class BlessCauldronView extends JPanel {
 
         try {
 
+            if (table.isEditing()) {
+                table.getCellEditor().stopCellEditing();
+            }
+
             int qty = Integer.parseInt(table.getValueAt(0, 4).toString());
+            int broken = player.getInventory().getUnusableCauldronsCount();
+            int totalCost = qty * Cauldron.blessPrice;
+
+            if (qty <= 0 || qty > broken) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter a valid quantity (1 to " + broken + ").");
+                return;
+            }
+
+            if (player.getCrystals() < totalCost) {
+                JOptionPane.showMessageDialog(this,
+                        "You don't have enough crystals. Need " + totalCost
+                        + ", have " + player.getCrystals() + ".");
+                return;
+            }
 
             BlessCauldron bless = new BlessCauldron();
 
@@ -130,7 +149,7 @@ public class BlessCauldronView extends JPanel {
                         "Cauldron(s) blessed successfully!");
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Invalid quantity or insufficient crystals.");
+                        "Blessing failed unexpectedly.");
             }
 
             lblBalance.setText("Balance: " + player.getCrystals());
