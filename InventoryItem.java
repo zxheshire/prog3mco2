@@ -1,7 +1,13 @@
+/* Manages the items stored in the inventory.
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.model;
 
 public class InventoryItem {
-	
+
+	// Each item is an ingredient from the Ingredients class
 	private Ingredients ingredient;
 	private int quantity;
 	
