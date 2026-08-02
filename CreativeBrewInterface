@@ -1,0 +1,104 @@
+package MCO2.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class CreativeBrewInterface extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	private JComboBox<String> comboBaseSelection;
+
+	private JCheckBox chkStrawberry, chkOrange, chkLemon, chkBanana, chkMango, chkPineapple, chkKiwi, chkBlueberry, chkCoconut;
+	private JButton btnCreativeBrewConcoction;
+	private JButton btnExitCreativeBrew;
+	
+	CreativeBrewInterface() {
+		
+		setLayout(null);
+		setSize(588, 450);
+
+		JLabel lblTitle = new JLabel("--- BREW CONCOCTION : CREATIVE MODE ---");
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		lblTitle.setBounds(50, 20, 488, 25);
+		add(lblTitle);
+
+		JLabel lblBaseSelection = new JLabel("Select Base:");
+		lblBaseSelection.setBounds(50, 60, 100, 25);
+		add(lblBaseSelection);
+
+		String[] bases = {"SYRUP BASE", "BUBBLE BASE", "PERFUME BASE", "MILK BASE", "LOTION BASE"};
+		comboBaseSelection = new JComboBox<>(bases);
+		comboBaseSelection.setModel(new DefaultComboBoxModel(new String[] {"SYRUP BASE", "BUBBLE BASE", "PERFUME BASE", "MILK BASE", "LOTION BASE"}));
+		comboBaseSelection.setBounds(150, 60, 150, 25);
+		add(comboBaseSelection);
+
+		JLabel lblFruits = new JLabel("Select Ingredients (up to 3 unique types): ");
+		lblFruits.setBounds(60, 97, 279, 25);
+		add(lblFruits);
+		
+		chkStrawberry = new JCheckBox("STRAWBERRY"); chkStrawberry.setBounds(399, 145, 127, 25); add(chkStrawberry);
+		chkOrange = new JCheckBox("ORANGE"); chkOrange.setBounds(239,145, 100, 25); add(chkOrange);
+		chkLemon = new JCheckBox("LEMON"); chkLemon.setBounds(239, 199, 100, 25); add(chkLemon);
+		chkBanana = new JCheckBox("BANANA"); chkBanana.setBounds(397, 199, 100, 25); add(chkBanana);
+		chkMango = new JCheckBox("MANGO"); chkMango.setBounds(239, 254, 100,25); add(chkMango);
+		chkPineapple = new JCheckBox("PINEAPPLE"); chkPineapple.setBounds(50, 145, 100, 25); add(chkPineapple);
+		chkKiwi = new JCheckBox("KIWI"); chkKiwi.setBounds(397, 254, 100, 25); add(chkKiwi);
+		chkBlueberry = new JCheckBox("BLUEBERRY"); chkBlueberry.setBounds(50,199, 100, 25); add(chkBlueberry);
+		chkCoconut = new JCheckBox("COCONUT"); chkCoconut.setBounds(50, 254, 100, 25); add(chkCoconut);
+		
+		btnCreativeBrewConcoction = new JButton("Brew Concoction");
+		btnCreativeBrewConcoction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnCreativeBrewConcoction.setBounds(200, 335, 200,53);
+		add(btnCreativeBrewConcoction);
+		
+		btnExitCreativeBrew = new JButton("Back to Main Menu");
+		btnExitCreativeBrew.setBounds(338, 347, 200, 35);
+	}
+	
+	public JButton getBtnCreativeBrewConcoction() {
+		return this.btnCreativeBrewConcoction;
+	}
+	
+	public JButton getBtnExitCreativeBrew() {
+		return this.btnExitCreativeBrew;
+	}
+	
+	public JComboBox<String> getComboBaseSelection() {
+		return this.comboBaseSelection;
+	}
+	
+	public ArrayList<String> getSelectedFruitsList() {
+		ArrayList<String> selectedFruits = new ArrayList<>();
+		if (chkStrawberry.isSelected()) selectedFruits.add("STRAWBERRY");
+		if (chkOrange.isSelected()) selectedFruits.add("ORANGE");
+		if (chkLemon.isSelected()) selectedFruits.add("LEMON");
+		if (chkBanana.isSelected()) selectedFruits.add("BANANA");
+		if (chkMango.isSelected()) selectedFruits.add("MANGO");
+		if (chkPineapple.isSelected()) selectedFruits.add("PINEAPPLE");
+		if (chkKiwi.isSelected()) selectedFruits.add("KIWI");
+		if (chkBlueberry.isSelected()) selectedFruits.add("BLUEBERRY");
+		if (chkCoconut.isSelected()) selectedFruits.add("COCONUT");
+		return selectedFruits;
+	}
+	
+	public void resetCheckboxes() {
+		chkStrawberry.setSelected(false);
+		chkOrange.setSelected(false);
+		chkLemon.setSelected(false);
+		chkBanana.setSelected(false);
+		chkMango.setSelected(false);
+		chkPineapple.setSelected(false);
+		chkKiwi.setSelected(false);
+		chkBlueberry.setSelected(false);
+		chkCoconut.setSelected(false);
+		}
+
+}
