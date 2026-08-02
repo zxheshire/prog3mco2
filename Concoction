@@ -25,7 +25,7 @@ public class Concoction {
 		}
 	}
 	
-	public boolean recipeMode(Player p, Recipe targetRecipe) {
+	public boolean recipeMode(Player p, Market marketInstance, Recipe targetRecipe) {
 		if(targetRecipe == null) return false;
 		
 		String baseNeeded = targetRecipe.getBase().getName();
@@ -62,11 +62,14 @@ public class Concoction {
 		this.sellPrice = targetRecipe.getSellingPrice();
 		
 		p.addCrystals(this.sellPrice);
+		
+		marketInstance.incrementBrewCount();
+		
 		return true;
 		
 	}
 	
-	public Recipe creativeMode(Player p, RecipeDatabase db, String baseName, ArrayList<String> chosenFruits) {
+	public Recipe creativeMode(Player p, RecipeDatabase db, String baseName, Market marketInstance, ArrayList<String> chosenFruits) {
 		Inventory inv = p.getInventory();
 		
 		
