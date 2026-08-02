@@ -1,0 +1,56 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class RecipeBrewInterface extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	private JList<String> recipeList;
+	private DefaultListModel<String> recipeListModel;
+	private JButton btnBrewSelectedRecipe;
+	private JButton btnExitRecipeBrew;
+	
+	public RecipeBrewInterface() {
+		
+		setLayout(null);
+		setSize(588, 450);
+
+		JLabel lblTitle = new JLabel("--- BREW CONCOCTION : RECIPE MODE ---");
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		lblTitle.setBounds(50, 20, 488, 25);
+		add(lblTitle);
+
+		recipeListModel = new DefaultListModel<>();
+		recipeList = new JList<>(recipeListModel);
+		JScrollPane scrollPane = new JScrollPane(recipeList);
+		scrollPane.setBounds(50, 60, 488, 260);
+		add(scrollPane);
+
+		btnBrewSelectedRecipe = new JButton("Brew Selected Recipe");
+		btnBrewSelectedRecipe.setBounds(50, 347, 200, 51);
+		add(btnBrewSelectedRecipe);
+
+		btnExitRecipeBrew = new JButton("Back to Main Menu");
+		btnExitRecipeBrew.setBounds(338, 347, 200, 51);
+		add(btnExitRecipeBrew);
+
+	}
+	
+	public JButton getBtnBrewSelectedRecipe() {
+		return this.btnBrewSelectedRecipe;
+	}
+	
+	public JButton getBtnExitRecipeBrew() {
+		return this.btnExitRecipeBrew;
+	}
+	
+	public JList<String> getRecipeList() {
+		return this.recipeList;
+	}
+	
+	public DefaultListModel<String> getRecipeListModel() {
+		return this.recipeListModel;
+	}
+
+}
