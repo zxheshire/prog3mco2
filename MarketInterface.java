@@ -20,7 +20,7 @@ public class MarketInterface extends JPanel {
     
 
     /**
-     * Market Interface
+     * Displays the overall market interface panel
      */
     public MarketInterface() {
         setLayout(null);
