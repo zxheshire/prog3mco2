@@ -1,16 +1,23 @@
+/**
+* This class represents the base type of 
+* a concoction/potion (e.g. syrup, bubble, etc)
+* defaulting to "SYRUP BASE" if none given
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.model;
 
-/**
- * 
- */
 public class ConcoctionBase {
 	
 	private String name;
-	
-	/**
-	 * 
-	 * @param name
-	 */
+
+/**
+* Create a base with the given name, defaulting to "SYRUP BASE" if
+* the name is null or blank.
+*/
+
 	public ConcoctionBase(String name) {
 		if(name == null || name.trim().isEmpty()) {
 			this.name = "SYRUP BASE";
@@ -18,17 +25,15 @@ public class ConcoctionBase {
 			this.name = name.trim();
 		}
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
+// Returns the base's name
+
 	public String getName() {
 		return this.name;
 	}
-	/**
-	 * 
-	 * @param name
-	 */
+
+// Sets the base's name, trimming whitespace, if it's non-null and non-blank
+
 	public void setName(String name) {
 		if(name != null && !name.trim().isEmpty()) {
 			this.name = name.trim();
