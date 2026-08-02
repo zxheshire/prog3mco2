@@ -37,7 +37,11 @@ public class Ingredients {
 	public int getSellingPrice() {
 		return this.sellingPrice;
 	}
-	
+
+/*
+* Initializes the Ingredients
+* Adds ingredient name, price, and selling price
+*/
 	public static void initializeIngredients() {
 		// mixture ingredients
 		ingList[0] = new Ingredients("Strawberry", 125, 25);
@@ -58,7 +62,10 @@ public class Ingredients {
 		ingList[13] = new Ingredients("Lotion Base", 150, 25);
 		
 	}
-	
+
+/*
+* Gets random ingredients from the list
+*/
 	public static Ingredients getRandomIngredient() {
 	    Random rnd = new Random();
 
