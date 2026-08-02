@@ -52,11 +52,15 @@ public class Concoction {
 		ArrayList<String> fruitsNeeded = targetRecipe.getFruits();
 		Inventory inv = p.getInventory();
 		
+		if(inv.getUsableCauldronsCount() < 1) {
+			System.out.println("You have no usable cauldrons to brew with!");
+			return false;
+		}
+		
 		if(inv.getIngredientQty(baseNeeded) < 1) return false;
-			for(String fruit : fruitsNeeded) {
-				if(inv.getIngredientQty(fruit) < 1)return false;
-				
-			}
+		for(String fruit : fruitsNeeded) {
+			if(inv.getIngredientQty(fruit) < 1) return false;
+		}
 		
 		if(inv.getIngredientQty(baseNeeded) >= 1) {
 			for(int i = 0; i < inv.getItems().length; i++) {
@@ -100,6 +104,10 @@ public class Concoction {
 	public Recipe creativeMode(Player p, RecipeDatabase db, String baseName, Market marketInstance, ArrayList<String> chosenFruits) {
 		Inventory inv = p.getInventory();
 		
+		if(inv.getUsableCauldronsCount() < 1) {
+			System.out.println("You have no usable cauldrons to brew with!");
+			return null;
+		}
 		
 		if(inv.getIngredientQty(baseName) < 1) return null;
 		for (String f :chosenFruits) {
