@@ -1,3 +1,9 @@
+/* This file manages the Bless Cauldron Interface.
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
+
 package MCO2.view;
 
 import javax.swing.*;
@@ -16,6 +22,9 @@ public class BlessCauldronView extends JPanel {
 
     private Player player;
 
+/*
+* This code manages the display and design of the overall panel
+*/
     public BlessCauldronView() {
 
         setLayout(new BorderLayout());
@@ -83,6 +92,9 @@ public class BlessCauldronView extends JPanel {
 
     }
 
+    /*
+    * Displays the broken cauldron(s) found in the inventory of the player.
+    */
     public void loadInventory() {
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -100,6 +112,11 @@ public class BlessCauldronView extends JPanel {
         });
     }
 
+/*
+* This code manages the input of the player
+* If the cauldron to be blessed is valid or not
+* Blesses the cauldron if valid
+*/
     private void BlessSelected() {
 
         try {
@@ -124,7 +141,10 @@ public class BlessCauldronView extends JPanel {
                     "Please enter a valid quantity.");
         }
     }
-    
+
+/*
+* Updates the Player's balance and inventory
+*/
     public void setPlayer(Player player) {
         this.player = player;
 
@@ -132,7 +152,8 @@ public class BlessCauldronView extends JPanel {
 
         loadInventory();
     }
-    
+
+// back
     public JButton getBtnBack() {
         return btnBack;
     }
