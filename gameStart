@@ -103,15 +103,6 @@ public class gameStart {
 			}
 		});
 		
-		this.welcomeView.getBtnCheckInventory().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				p.getInventory().viewInventory(false);
-			
-			}
-		});
-		
 		this.welcomeView.getBtnCheckSpellbook().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -150,33 +141,38 @@ public class gameStart {
 		});
 		
 	
-		
+	// Visit Market View
 		this.welcomeView.getBtnVisitMarket().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				primaryMarket.visitMarket(p);
-				refreshDashboardView();
-				
+				welcomeView.showMarketView();
 			}
 		});
+
+		//For exiting Market
+		this.welcomeView.getMarketView().getBtnExitMarket().addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    		refreshDashboardView();
+		        welcomeView.showDashboardPage();
+		    }
+		});
 		
+		// For bless cauldron no broken cauldron
 		this.welcomeView.getBtnBlessCauldron().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(p.getInventory().getUnusableCauldronsCount() == 0) {
-					}
-					if (p.getInventory().getUnusableCauldronsCount() > 0) {
-						BlessCauldron bless = new BlessCauldron();
-						bless.visitMenu(p);
-					}
-					
-					else {
 						JOptionPane.showMessageDialog(welcomeView, "\nYou have no cauldrons to bless in your inventory.", "Clinic Alert", JOptionPane.INFORMATION_MESSAGE);
-					}
+						welcomeView.showDashboardPage(); // go back/main menu
+				        return; // IMPORTANT: stops the rest of the code
+				    }
+
+				    welcomeView.getBlessView().setPlayer(p);
+				    welcomeView.showBlessView();
 			}
 		});
-		
+
 		this.welcomeView.getBtnLoginBonus().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -301,6 +297,94 @@ public class gameStart {
 		this.welcomeView.setVisible(true);
 		
 	}
+
+//For Market Buy Ingredients Interface
+	private void setupBuyView() {
+
+	    welcomeView.createBuyView(primaryMarket);
+
+	    welcomeView.getBuyView().setPlayer(p);
+
+	    // buy panel
+	    welcomeView.getMarketView().getBtnBuyIngredients().addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+
+	            welcomeView.getBuyView().loadMarket();
+
+	            welcomeView.showBuyView();
+	        }
+	    });
+
+	    // back
+	    welcomeView.getBuyView().getBtnBack().addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            welcomeView.showMarketView();
+	        }
+	    });
+	}
+	
+	//For Market Sell Ingredients Interface
+	private void setupSellView() {
+
+	    welcomeView.createSellView(primaryMarket);
+
+	    welcomeView.getSellView().setPlayer(p);
+
+	    // Sell panel
+	    welcomeView.getMarketView().getBtnSellIngredients().addActionListener(e -> {
+
+	        welcomeView.getSellView().setPlayer(p);
+	        welcomeView.showSellView();
+	    });
+
+	    // Back 
+	    welcomeView.getSellView().getBtnBack().addActionListener(e -> {
+	        welcomeView.showMarketView();
+	    });
+	}
+	
+	//For Inventory Interface
+	private void setupInventoryView() {
+
+	    welcomeView.createInventoryView();
+
+	    welcomeView.getInventoryView().setPlayer(p);
+
+	    // Open Inventory
+	    welcomeView.getBtnCheckInventory().addActionListener(e -> {
+	        welcomeView.getInventoryView().setPlayer(p);
+	        welcomeView.showInventoryView();
+	    });
+
+	    // Back 
+	    welcomeView.getInventoryView().getBtnBack().addActionListener(e -> {
+	        refreshDashboardView();
+	        welcomeView.showDashboardPage();
+	    });
+	}
+	
+	//for bless cauldron view
+	private void setupBlessView() {
+
+	    welcomeView.createBlessView();
+
+	    welcomeView.getBlessView().setPlayer(p);
+
+	    // Bless Cauldron
+	    welcomeView.getBtnBlessCauldron().addActionListener(e -> {
+	        welcomeView.getBlessView().setPlayer(p);
+	        welcomeView.showBlessView();
+	    });
+
+	    // Back
+	    welcomeView.getBlessView().getBtnBack().addActionListener(e -> {
+	        refreshDashboardView();
+	        welcomeView.showDashboardPage();
+	    });
+	}
+	
 	
 	/**
 	 * Provisions a brand new player profile file. 
@@ -341,7 +425,11 @@ public class gameStart {
 		refreshDashboardView();
 		welcomeView.showDashboardPage();
 
-		
+		setupBuyView();
+		setupSellView();
+		setupInventoryView();
+		setupBlessView();
+
 	}
 	
 	/**
@@ -467,6 +555,11 @@ public class gameStart {
 			
 			refreshDashboardView();
 			welcomeView.showDashboardPage();
+
+			setupBuyView();
+			setupSellView();
+			setupInventoryView();
+			setupBlessView();
 			
 		}catch(IOException | NumberFormatException e) {
 			JOptionPane.showMessageDialog(welcomeView, "Error reading save file, going back to menu", "Error", JOptionPane.ERROR_MESSAGE);
