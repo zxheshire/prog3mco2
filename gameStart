@@ -280,8 +280,18 @@ public class gameStart {
 					JOptionPane.showMessageDialog(welcomeView, "Successfully brewed [" + discoveredRecipe.getPotionName() + "] | Recipe ID: #" + discoveredRecipe.getConcoctionID(), "Brew Success", JOptionPane.INFORMATION_MESSAGE);
 					}else {
 						
-						if(p.getInventory().getIngredientQty(chosenBase) < 1) {
-							JOptionPane.showMessageDialog(welcomeView, "Failed to brew. You do not have enough [" + chosenBase + "] in your inventory.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
+						boolean missingIngredient = p.getInventory().getIngredientQty(chosenBase) < 1;
+						if(!missingIngredient) {
+							for(String fruit : selectedFruits) {
+								if(p.getInventory().getIngredientQty(fruit) < 1) {
+									missingIngredient = true;
+									break;
+								}
+							}
+						}
+						
+						if(missingIngredient) {
+							JOptionPane.showMessageDialog(welcomeView, "Failed to brew. You do not have enough of the selected ingredients in your inventory.", "Brew Failure", JOptionPane.ERROR_MESSAGE);
 							
 						}else {
 							
