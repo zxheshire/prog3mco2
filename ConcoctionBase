@@ -1,0 +1,38 @@
+package MCO2.model;
+
+/**
+ * 
+ */
+public class ConcoctionBase {
+	
+	private String name;
+	
+	/**
+	 * 
+	 * @param name
+	 */
+	public ConcoctionBase(String name) {
+		if(name == null || name.trim().isEmpty()) {
+			this.name = "SYRUP BASE";
+		}else {
+			this.name = name.trim();
+		}
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
+	}
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		if(name != null && !name.trim().isEmpty()) {
+			this.name = name.trim();
+		}
+	}
+	
+}
