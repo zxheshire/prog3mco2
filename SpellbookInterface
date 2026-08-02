@@ -1,7 +1,20 @@
+/**
+* Spellbook interface that will display the discovered
+* recipes of the player
+* authors: Marie Valle
+* version 1.0
+* since 2026
+*/
+
 package MCO2.view;
 
 import javax.swing.*;
 import java.awt.*;
+
+/**
+ * Panel that displays the player's spellbook contents in a read-only text area,
+ * with a button to return to the main dashboard.
+ */
 
 public class SpellbookInterface extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -9,6 +22,10 @@ public class SpellbookInterface extends JPanel {
     private JTextArea txtSpellbookArea;
     private JButton btnExitSpellbookHome;
 
+/**
+* Create the panel.
+* Builds the title label, scrollable spellbook text area, and back button.
+*/
     
     public SpellbookInterface() {
         setLayout(null); 
@@ -34,10 +51,13 @@ public class SpellbookInterface extends JPanel {
         add(btnExitSpellbookHome);
     }
 
+// Returns the "Back to Main Menu" button
+
     public JButton getBtnExitSpellbookHome() {
         return this.btnExitSpellbookHome;
     }
 
+// Updates the spellbook text area with the given content
     
     public void updateSpellbookDisplay(String content) {
         this.txtSpellbookArea.setText(content);
