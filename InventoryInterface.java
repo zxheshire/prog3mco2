@@ -1,3 +1,8 @@
+/* Manages the inventory interface
+* @author Ysha Nacpil
+* @version 1.0
+* @since 2026
+*/
 package MCO2.view;
 
 import javax.swing.*;
@@ -14,7 +19,7 @@ public class InventoryInterface extends JPanel {
 	private JLabel lblBalance;
 	private Player player;
 
-
+// Displays the overall design of the Inventory Interface panel
     public InventoryInterface() {
 
 
@@ -62,8 +67,10 @@ public class InventoryInterface extends JPanel {
 
     }
     
-    
-
+/*
+* Loads in the Inventory of the Player
+* Includes the List of Ingredients and Cauldrons (usable and unusable) a player has
+*/
     public void loadInventory() {
 
     	DefaultTableModel model = (DefaultTableModel) inventoryTable.getModel();
@@ -110,7 +117,8 @@ public class InventoryInterface extends JPanel {
         	});
         	
     }
-    
+
+// Updates the Players Balance and Inventory
     public void setPlayer(Player player) {
         this.player = player;
 
@@ -118,7 +126,8 @@ public class InventoryInterface extends JPanel {
 
         loadInventory();
     }
-    
+
+// back
     public JButton getBtnBack() {
         return btnBack;
     }
